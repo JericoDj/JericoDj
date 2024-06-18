@@ -100,21 +100,20 @@ class CreateTaskDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Container(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Create Task',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     Get.back();
                   },
@@ -130,23 +129,22 @@ class CreateTaskDialog extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 10),
-            Expanded(
-              child: Obx(() {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: tasksController.taskDescriptions.length,
-                  itemBuilder: (context, index) {
-                    return TaskDescriptionWidget(
-                      description: tasksController.taskDescriptions[index],
-                      assistants: tasksController.assistants,
-                      onRemove: () {
-                        tasksController.removeTaskDescription(index);
-                      },
-                    );
-                  },
-                );
-              }),
-            ),
+            Obx(() {
+              return ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: tasksController.taskDescriptions.length,
+                itemBuilder: (context, index) {
+                  return TaskDescriptionWidget(
+                    description: tasksController.taskDescriptions[index],
+                    assistants: tasksController.assistants,
+                    onRemove: () {
+                      tasksController.removeTaskDescription(index);
+                    },
+                  );
+                },
+              );
+            }),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
@@ -339,21 +337,20 @@ class TaskDetailsDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
       ),
-      child: Container(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
-        width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
+                const Text(
                   'Task Details',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: () {
                     Get.back();
                   },
@@ -363,7 +360,7 @@ class TaskDetailsDialog extends StatelessWidget {
             const SizedBox(height: 20),
             Text(
               'Task Title: ${task.title}',
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 10),
             ...task.descriptions.map((description) {
@@ -372,17 +369,17 @@ class TaskDetailsDialog extends StatelessWidget {
                 children: [
                   Text(
                     'Task Description: ${description.description.value}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     'Assigned to: ${description.selectedAssistant.value}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     'Due Date: ${description.dueDate.value != null ? description.dueDate.value.toString() : 'No date chosen'}',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                   const Divider(),
                 ],

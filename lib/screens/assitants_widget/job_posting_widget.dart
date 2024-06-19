@@ -99,12 +99,12 @@ class HireAssistantDialog extends StatefulWidget {
 
 class _HireAssistantDialogState extends State<HireAssistantDialog> {
   final List<String> vaNiches = [
-    'General Social Media VA',
-    'Customer Support VA',
-    'Web/Mobile App VA',
-    'E-commerce VA',
-    'Bookkeeping VA',
-    'Graphic Design VA',
+    'General Virtual Assistant (VA)',
+    'Social Media Management',
+    'Computer Technical VA',
+    'Graphical Creation VA',
+    'Administrative VA',
+    'Marketing VA',
   ];
 
   final List<String> skills = [

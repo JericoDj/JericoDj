@@ -1,98 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:action_slider/action_slider.dart';
-
-void main() {
-  runApp(GetMaterialApp(
-    home: Scaffold(
-      appBar: AppBar(title: Text('Applicants Page')),
-      body: ApplicantsPage(),
-    ),
-  ));
-}
-
-class ApplicantsController extends GetxController {
-  var applicants = <Applicant>[
-    Applicant(
-      name: 'Applicant 1',
-      skills: 'Skill Set 1',
-      rating: 4.0,
-      email: 'applicant1@example.com',
-      phone: '+1234567890',
-      location: 'City, Country',
-      professionalSummary: 'Experienced professional in various skills.',
-      jobAppliedFor: 'Job Posting 1',
-    ),
-    Applicant(
-      name: 'Applicant 2',
-      skills: 'Skill Set 2',
-      rating: 4.5,
-      email: 'applicant2@example.com',
-      phone: '+1234567891',
-      location: 'City, Country',
-      professionalSummary: 'Highly skilled and motivated individual.',
-      jobAppliedFor: 'Job Posting 2',
-    ),
-    Applicant(
-      name: 'Applicant 3',
-      skills: 'Skill Set 3',
-      rating: 4.2,
-      email: 'applicant3@example.com',
-      phone: '+1234567892',
-      location: 'City, Country',
-      professionalSummary: 'Dedicated and results-oriented professional.',
-      jobAppliedFor: 'Job Posting 3',
-    ),
-  ].obs;
-
-  void scheduleInterview(String name, DateTime date, TimeOfDay time) {
-    final applicant = applicants.firstWhere((a) => a.name == name);
-    applicant.interviewDate = DateFormat('yyyy-MM-dd').format(date);
-    applicant.interviewTime = time.format(Get.context!);
-    applicant.status = 'Scheduled';
-    applicants.refresh();
-  }
-
-  void hireApplicant(String name) {
-    final applicant = applicants.firstWhere((a) => a.name == name);
-    applicant.status = 'Hired';
-    applicants.refresh();
-  }
-
-  void declineApplicant(String name) {
-    final applicant = applicants.firstWhere((a) => a.name == name);
-    applicant.status = 'Declined';
-    applicants.refresh();
-  }
-}
-
-class Applicant {
-  String name;
-  String skills;
-  double rating;
-  String email;
-  String phone;
-  String location;
-  String professionalSummary;
-  String jobAppliedFor;
-  String? interviewDate;
-  String? interviewTime;
-  String status = 'Pending'; // Possible statuses: Pending, Scheduled, Hired, Declined
-
-  Applicant({
-    required this.name,
-    required this.skills,
-    required this.rating,
-    required this.email,
-    required this.phone,
-    required this.location,
-    required this.professionalSummary,
-    required this.jobAppliedFor,
-    this.interviewDate,
-    this.interviewTime,
-  });
-}
+import 'package:slider_button/slider_button.dart';
+import '../../controller/assistants_controller/applicants_controller.dart';
+import '../../controller/assistants_controller/my_assistant_controller.dart';
+import '../../models/applicant_model.dart';
+import '../../models/my_assistant_model.dart';
+import 'my_assistant_widget.dart';
 
 class ApplicantsPage extends StatelessWidget {
   @override
@@ -116,18 +30,6 @@ class ApplicantsPage extends StatelessWidget {
                   onTap: () {
                     Get.to(() => AssistantProfilePage(name: applicant.name));
                   },
-                  onScheduleInterview: () {
-                    Get.dialog(ScheduleInterviewDialog(name: applicant.name));
-                  },
-                  onHireOrDecline: () {
-                    Get.dialog(HireDeclineDialog(applicant: applicant, action: 'Hire or Decline'));
-                  },
-                  onAssignTasks: () {
-                    Get.to(() => AssignTasksPage(name: applicant.name));
-                  },
-                  onTrackPerformance: () {
-                    Get.to(() => TrackPerformancePage(name: applicant.name));
-                  },
                 );
               },
             )),
@@ -141,18 +43,10 @@ class ApplicantsPage extends StatelessWidget {
 class AssistantTile extends StatelessWidget {
   final Applicant applicant;
   final VoidCallback onTap;
-  final VoidCallback onScheduleInterview;
-  final VoidCallback onHireOrDecline;
-  final VoidCallback onAssignTasks;
-  final VoidCallback onTrackPerformance;
 
   AssistantTile({
     required this.applicant,
     required this.onTap,
-    required this.onScheduleInterview,
-    required this.onHireOrDecline,
-    required this.onAssignTasks,
-    required this.onTrackPerformance,
   });
 
   @override
@@ -179,27 +73,6 @@ class AssistantTile extends StatelessWidget {
               Text('Rating: ${applicant.rating}', style: const TextStyle(fontSize: 14)),
               const SizedBox(height: 5),
               Text('Applied For: ${applicant.jobAppliedFor}', style: const TextStyle(fontSize: 14)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.schedule),
-                    onPressed: onScheduleInterview,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.thumb_up),
-                    onPressed: onHireOrDecline,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.task),
-                    onPressed: onAssignTasks,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.track_changes),
-                    onPressed: onTrackPerformance,
-                  ),
-                ],
-              ),
             ],
           ),
         ),
@@ -224,7 +97,10 @@ class AssistantProfilePage extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20),
         child: Obx(() {
-          final applicant = applicantsController.applicants.firstWhere((a) => a.name == name);
+          final applicant = applicantsController.applicants.firstWhereOrNull((a) => a.name == name);
+          if (applicant == null) {
+            return Center(child: Text('Applicant not found'));
+          }
           return Column(
             children: [
               Row(
@@ -428,7 +304,7 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
                 IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(false);  // Ensure false is returned
                   },
                 ),
               ],
@@ -456,7 +332,7 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
               onPressed: () {
                 final ApplicantsController applicantsController = Get.find();
                 applicantsController.scheduleInterview(widget.name, selectedDate, selectedTime);
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);  // Ensure true is returned
               },
               child: const Text('Schedule Interview'),
             ),
@@ -498,7 +374,7 @@ class HireDeclineDialog extends StatelessWidget {
                 IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pop(false);  // Ensure false is returned
                   },
                 ),
               ],
@@ -520,61 +396,48 @@ class HireDeclineDialog extends StatelessWidget {
               style: TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 20),
-            ActionSlider.standard(
-              sliderBehavior: SliderBehavior.stretch,
-              toggleColor:
-              Colors.yellow,
-              action: (controller) async {
+            SliderButton(
+              buttonColor: Colors.yellow,
+              shimmer: true,
+              action: () async {
                 final ApplicantsController applicantsController = Get.find();
+                final MyAssistantsController myAssistantsController = Get.find();
                 if (action == 'Hire') {
-                  applicantsController.hireApplicant(applicant.name);
+                  final newAssistant = MyAssistant(
+                    name: applicant.name,
+                    skills: applicant.skills,
+                    rating: applicant.rating,
+                    jobAppliedFor: applicant.jobAppliedFor,
+                    startDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+                    email: applicant.email,
+                    phone: applicant.phone,
+                    profilePictureUrl: 'https://loremflickr.com/320/240',
+                  );
+                  myAssistantsController.addAssistant(newAssistant);
+                  applicantsController.applicants.remove(applicant);
+                  Get.back();
+                  Get.back();
                 } else {
-                  applicantsController.declineApplicant(applicant.name);
+                  applicantsController.declineApplicant(applicant);
+                  Get.back();
+                  Get.back();
                 }
-                controller.success();
-                await Future.delayed(Duration(seconds: 1));
-                Navigator.of(context).pop();
+                return true;  // Ensure true is returned
               },
-              child: Text('Slide to $action'),
+              label: Text(
+                'Slide to $action',
+                style: TextStyle(color: Colors.black),
+              ),
+              icon: Icon(Icons.arrow_right_alt, color: Colors.blueAccent, size: 30,),
+              width: 300,
+              height: 60,
+              buttonSize: 60,
+              backgroundColor: Colors.grey.shade300,
+              highlightedColor: Colors.green,
+              baseColor: Colors.blue,
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AssignTasksPage extends StatelessWidget {
-  final String name;
-
-  AssignTasksPage({required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Assign Tasks to $name'),
-      ),
-      body: Center(
-        child: Text('Task assignment details for $name'),
-      ),
-    );
-  }
-}
-
-class TrackPerformancePage extends StatelessWidget {
-  final String name;
-
-  TrackPerformancePage({required this.name});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Track $name\'s Performance'),
-      ),
-      body: Center(
-        child: Text('Performance tracking details for $name'),
       ),
     );
   }

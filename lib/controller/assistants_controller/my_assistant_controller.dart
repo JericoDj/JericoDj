@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
+import '../../models/my_assistant_model.dart';
 
-import 'job_posting_controller.dart';
+class MyAssistantsController extends GetxController {
+  var assistants = <MyAssistant>[].obs;
 
-
-class AssistantsController extends GetxController {
-  var selectedIndex = 0.obs;
-  var jobPostings = <JobPosting>[].obs;
+  void addAssistant(MyAssistant assistant) {
+    assistants.add(assistant);
+  }
 }

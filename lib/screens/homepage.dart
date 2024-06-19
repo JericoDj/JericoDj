@@ -251,12 +251,12 @@ class AssistantAvatar extends StatelessWidget {
 
 class VANichesSection extends StatelessWidget {
   final List<String> vaNiches = [
-    'General Social Media VA',
-    'Customer Support VA',
-    'Web/Mobile App VA',
-    'E-commerce VA',
-    'Bookkeeping VA',
-    'Graphic Design VA',
+    'General Virtual Assistant',
+    'Social Media Management',
+    'Computer Technical VA',
+    'Graphical Creation VA',
+    'Administrative VA',
+    'Marketing VA',
   ];
 
   @override

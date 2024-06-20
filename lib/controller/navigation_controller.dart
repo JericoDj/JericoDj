@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:samplemobileapp/screens/assistants_page.dart';
+import 'package:samplemobileapp/screens/hire_assistant_page.dart';
 import 'package:samplemobileapp/screens/homepage.dart';
 import 'package:samplemobileapp/screens/profile_page.dart';
 import 'package:samplemobileapp/screens/reports_page.dart';
 import 'package:samplemobileapp/screens/tasks_page.dart';
-
 
 class NavigationBarMenu extends StatelessWidget {
   const NavigationBarMenu({super.key});
@@ -28,9 +28,9 @@ class NavigationBarMenu extends StatelessWidget {
       onDestinationSelected: (index) => controller.selectedIndex.value = index,
       destinations: const [
         NavigationDestination(icon: Icon(Icons.home), label: "Home"),
-        NavigationDestination(icon: Icon(Icons.group), label: "Assistants"),
+        NavigationDestination(icon: Icon(Icons.hail), label: "Hire"),
         NavigationDestination(icon: Icon(Icons.assignment), label: "Tasks"),
-        NavigationDestination(icon: Icon(Icons.bar_chart), label: "Reports"),
+        NavigationDestination(icon: Icon(Icons.group), label: "Assistants"),
         NavigationDestination(icon: Icon(Icons.person), label: "Profile"),
       ],
     );
@@ -41,9 +41,9 @@ class NavigationController extends GetxController {
   final Rx<int> selectedIndex = 0.obs;
   final screens = [
     HomePage(),
-    AssistantsPage(),
+    HireAssistantsPage(),
     TasksPage(),
-    ReportsPage(),
+    AssistantsPage(),
     ProfilePage(),
   ];
 }

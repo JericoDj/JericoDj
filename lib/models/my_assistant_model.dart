@@ -1,4 +1,4 @@
-class MyAssistant {
+class  MyAssistant {
   String name;
   String skills;
   double rating;

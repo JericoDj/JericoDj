@@ -6,7 +6,6 @@ import '../../controller/assistants_controller/applicants_controller.dart';
 import '../../controller/assistants_controller/my_assistant_controller.dart';
 import '../../models/applicant_model.dart';
 import '../../models/my_assistant_model.dart';
-import 'my_assistant_widget.dart';
 
 class ApplicantsPage extends StatelessWidget {
   @override
@@ -401,28 +400,13 @@ class HireDeclineDialog extends StatelessWidget {
               shimmer: true,
               action: () async {
                 final ApplicantsController applicantsController = Get.find();
-                final MyAssistantsController myAssistantsController = Get.find();
                 if (action == 'Hire') {
-                  final newAssistant = MyAssistant(
-                    name: applicant.name,
-                    skills: applicant.skills,
-                    rating: applicant.rating,
-                    jobAppliedFor: applicant.jobAppliedFor,
-                    startDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                    email: applicant.email,
-                    phone: applicant.phone,
-                    profilePictureUrl: 'https://loremflickr.com/320/240',
-                  );
-                  myAssistantsController.addAssistant(newAssistant);
-                  applicantsController.applicants.remove(applicant);
-                  Get.back();
-                  Get.back();
+                  applicantsController.hireApplicant(applicant);
                 } else {
                   applicantsController.declineApplicant(applicant);
-                  Get.back();
-                  Get.back();
                 }
-                return true;  // Ensure true is returned
+                Get.back();  // Close the dialog
+                Get.back();  // Go back to the previous screen
               },
               label: Text(
                 'Slide to $action',

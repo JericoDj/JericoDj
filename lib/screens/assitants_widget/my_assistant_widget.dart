@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controller/assistants_controller/my_assistant_controller.dart';
+import '../../controller/task_controller/task_controller.dart';
 import '../../models/my_assistant_model.dart';
+import '../../task_dialog/create_task_dialog.dart';
 
 class MyAssistantsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MyAssistantsController myAssistantsController = Get.put(MyAssistantsController());
+    final TasksController tasksController = Get.put(TasksController());
 
     return Padding(
       padding: const EdgeInsets.all(20),
@@ -50,7 +53,8 @@ class MyAssistantsPage extends StatelessWidget {
                           ),
                           ElevatedButton(
                             onPressed: () {
-                              // Assign task action
+                              tasksController.setAssistants(myAssistantsController.assistants.map((a) => a.name).toList());
+                              Get.dialog(CreateTaskDialog(assistant: assistant, assistants: myAssistantsController.assistants));
                             },
                             child: const Text('Assign Task'),
                           ),

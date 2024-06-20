@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:samplemobileapp/controller/task_controller/task_controller.dart';
+import 'package:intl/intl.dart';
+import '../controller/assistants_controller/my_assistant_controller.dart';
+import '../controller/task_controller/task_controller.dart';
+import '../models/my_assistant_model.dart';
+import '../task_dialog/create_task_dialog.dart';
 import 'messages_page.dart';
 
 class TasksPage extends StatelessWidget {
-  const TasksPage({super.key});
+  final MyAssistant? assistant;
+
+  const TasksPage({Key? key, this.assistant}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final TasksController tasksController = Get.put(TasksController());
+    final MyAssistantsController myAssistantsController = Get.put(MyAssistantsController());
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +32,14 @@ class TasksPage extends StatelessWidget {
       body: const TasksOverview(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.dialog(CreateTaskDialog());
+          final assistants = myAssistantsController.assistants;
+
+          if (assistant != null) {
+            tasksController.setAssistants([assistant!.name]);
+            Get.dialog(CreateTaskDialog(assistant: assistant!, assistants: assistants));
+          } else {
+            Get.dialog(CreateTaskDialog(assistants: assistants));
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -91,241 +105,6 @@ class TaskTile extends StatelessWidget {
   }
 }
 
-class CreateTaskDialog extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final TasksController tasksController = Get.find();
-
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Create Task',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () {
-                    Get.back();
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: tasksController.taskTitleController,
-              decoration: const InputDecoration(
-                labelText: 'Task Title',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 10),
-            Obx(() {
-              return ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: tasksController.taskDescriptions.length,
-                itemBuilder: (context, index) {
-                  return TaskDescriptionWidget(
-                    description: tasksController.taskDescriptions[index],
-                    assistants: tasksController.assistants,
-                    onRemove: () {
-                      tasksController.removeTaskDescription(index);
-                    },
-                  );
-                },
-              );
-            }),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                tasksController.addTaskDescription();
-              },
-              child: const Text('Add Task Description'),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Due Date:'),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () {
-                    _selectDueDate(context);
-                  },
-                ),
-              ],
-            ),
-            Obx(() {
-              return Text(tasksController.selectedDueDate.value != null
-                  ? tasksController.selectedDueDate.value.toString()
-                  : 'No date chosen');
-            }),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                if (_validateTask(tasksController)) {
-                  tasksController.createTask();
-                  Get.back();
-                } else {
-                  Get.snackbar('Error', tasksController.errorMessage.value,
-                      snackPosition: SnackPosition.BOTTOM,
-                      backgroundColor: Colors.red,
-                      colorText: Colors.white);
-                }
-              },
-              child: const Text('Create Task'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  bool _validateTask(TasksController tasksController) {
-    if (tasksController.taskTitleController.text.isEmpty) {
-      tasksController.setErrorMessage('Task title is required.');
-      return false;
-    }
-    if (tasksController.taskDescriptions.isEmpty) {
-      tasksController.setErrorMessage('At least one task description is required.');
-      return false;
-    }
-    for (var description in tasksController.taskDescriptions) {
-      if (description.description.value.isEmpty) {
-        tasksController.setErrorMessage('Task description cannot be empty.');
-        return false;
-      }
-      if (description.selectedAssistant.value.isEmpty) {
-        tasksController.setErrorMessage('Please select an assistant.');
-        return false;
-      }
-      if (description.dueDate.value == null) {
-        tasksController.setErrorMessage('Please select a due date.');
-        return false;
-      }
-    }
-    tasksController.setErrorMessage('');
-    return true;
-  }
-
-  Future<void> _selectDueDate(BuildContext context) async {
-    final TasksController tasksController = Get.find();
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: tasksController.selectedDueDate.value ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (pickedDate != null && pickedDate != tasksController.selectedDueDate.value) {
-      tasksController.setDueDate(pickedDate);
-    }
-  }
-}
-
-class TaskDescriptionWidget extends StatelessWidget {
-  final TaskDescription description;
-  final List<String> assistants;
-  final VoidCallback onRemove;
-
-  TaskDescriptionWidget({
-    required this.description,
-    required this.assistants,
-    required this.onRemove,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final TextEditingController descriptionController =
-    TextEditingController(text: description.description.value);
-
-    descriptionController.addListener(() {
-      description.description.value = descriptionController.text;
-    });
-
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-        side: const BorderSide(color: Colors.grey),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Task Description',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Obx(() => DropdownButton<String>(
-                    hint: const Text('Select VA'),
-                    value: description.selectedAssistant.value.isEmpty
-                        ? null
-                        : description.selectedAssistant.value,
-                    onChanged: (String? newValue) {
-                      description.selectedAssistant.value =
-                          newValue ?? '';
-                    },
-                    items: assistants
-                        .map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                  )),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today),
-                  onPressed: () {
-                    _selectDescriptionDueDate(context);
-                  },
-                ),
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red),
-                  onPressed: onRemove,
-                ),
-              ],
-            ),
-            Obx(() {
-              return Text(description.dueDate.value != null
-                  ? description.dueDate.value.toString()
-                  : 'No date chosen');
-            }),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _selectDescriptionDueDate(BuildContext context) async {
-    final DateTime? pickedDate = await showDatePicker(
-      context: context,
-      initialDate: description.dueDate.value ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-    if (pickedDate != null && pickedDate != description.dueDate.value) {
-      description.dueDate.value = pickedDate;
-    }
-  }
-}
-
 class TaskDetailsDialog extends StatelessWidget {
   final Task task;
 
@@ -333,6 +112,7 @@ class TaskDetailsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TasksController tasksController = Get.find();
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),
@@ -363,6 +143,11 @@ class TaskDetailsDialog extends StatelessWidget {
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 10),
+            Text(
+              'Due Date: ${task.dueDate != null ? DateFormat('yyyy-MM-dd').format(task.dueDate!) : 'No date chosen'}',
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(height: 10),
             ...task.descriptions.map((description) {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,13 +163,35 @@ class TaskDetailsDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    'Due Date: ${description.dueDate.value != null ? description.dueDate.value.toString() : 'No date chosen'}',
+                    'Start Date: ${description.startDate.value != null ? DateFormat('yyyy-MM-dd').format(description.startDate.value!) : 'No date chosen'}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'End Date: ${description.endDate.value != null ? DateFormat('yyyy-MM-dd').format(description.endDate.value!) : 'No date chosen'}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Weekly Completion: ${description.weeklyCompletion.value}',
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Hours per Week: ${description.hoursPerWeek.value}',
                     style: const TextStyle(fontSize: 16),
                   ),
                   const Divider(),
                 ],
               );
             }).toList(),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                _selectDueDate(context, tasksController, task);
+              },
+              child: const Text('Set Due Date'),
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -396,5 +203,19 @@ class TaskDetailsDialog extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _selectDueDate(BuildContext context, TasksController tasksController, Task task) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: task.dueDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null && pickedDate != task.dueDate) {
+      tasksController.setDueDate(pickedDate);
+      task.dueDate = pickedDate;
+      tasksController.tasks.refresh();
+    }
   }
 }

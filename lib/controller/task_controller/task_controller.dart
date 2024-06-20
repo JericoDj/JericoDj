@@ -1,17 +1,27 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter/material.dart';
 
 class TasksController extends GetxController {
   final taskTitleController = TextEditingController();
   var taskDescriptions = <TaskDescription>[].obs;
   var selectedDueDate = Rxn<DateTime>();
   var errorMessage = ''.obs;
+  var assistants = <String>[].obs;
   var tasks = <Task>[].obs;
+  var recurrences = ["1", "2", "3", "5", "7", "Specify"].obs;
+  var hoursPerWeekOptions = ["10", "20", "30", "40", "Specify"].obs;
 
-  List<String> assistants = ['VA 1', 'VA 2', 'VA 3', 'VA 4', 'VA 5'];
-
-  void addTaskDescription() {
-    taskDescriptions.add(TaskDescription());
+  void addTaskDescription([String? assistant]) {
+    taskDescriptions.add(TaskDescription(
+      description: ''.obs,
+      selectedAssistant: (assistant ?? '').obs,
+      startDate: Rxn<DateTime>(),
+      endDate: Rxn<DateTime>(),
+      weeklyCompletion: ''.obs,
+      hoursPerWeek: ''.obs,
+      isCustomWeeklyCompletion: false.obs,
+      isCustomHoursPerWeek: false.obs,
+    ));
   }
 
   void removeTaskDescription(int index) {
@@ -26,14 +36,23 @@ class TasksController extends GetxController {
     errorMessage.value = message;
   }
 
+  void setAssistants(List<String> assistantNames) {
+    assistants.value = assistantNames;
+  }
+
   bool createTask() {
     if (_validateTask()) {
       tasks.add(Task(
         title: taskTitleController.text,
         descriptions: taskDescriptions.map((d) => TaskDescription(
-          description: d.description.value,
-          selectedAssistant: d.selectedAssistant.value,
-          dueDate: d.dueDate.value,
+          description: d.description,
+          selectedAssistant: d.selectedAssistant,
+          startDate: d.startDate,
+          endDate: d.endDate,
+          weeklyCompletion: d.weeklyCompletion,
+          hoursPerWeek: d.hoursPerWeek,
+          isCustomWeeklyCompletion: d.isCustomWeeklyCompletion,
+          isCustomHoursPerWeek: d.isCustomHoursPerWeek,
         )).toList(),
         dueDate: selectedDueDate.value,
       ));
@@ -65,10 +84,26 @@ class TasksController extends GetxController {
         isValid = false;
         errorMessage.value += 'Please select an assistant.\n';
       }
-      if (description.dueDate.value == null) {
+      if (description.startDate.value == null) {
         isValid = false;
-        errorMessage.value += 'Please select a due date.\n';
+        errorMessage.value += 'Please select a start date.\n';
       }
+      if (description.endDate.value == null) {
+        isValid = false;
+        errorMessage.value += 'Please select an end date.\n';
+      }
+      if (description.weeklyCompletion.value.isEmpty) {
+        isValid = false;
+        errorMessage.value += 'Please select weekly completion.\n';
+      }
+      if (description.hoursPerWeek.value.isEmpty) {
+        isValid = false;
+        errorMessage.value += 'Please select hours per week.\n';
+      }
+    }
+    if (selectedDueDate.value == null) {
+      isValid = false;
+      errorMessage.value += 'Please select a due date.\n';
     }
 
     return isValid;
@@ -95,17 +130,23 @@ class Task {
 }
 
 class TaskDescription {
-  RxString description = ''.obs;
-  RxString selectedAssistant = ''.obs;
-  Rxn<DateTime> dueDate = Rxn<DateTime>();
+  RxString description;
+  RxString selectedAssistant;
+  Rxn<DateTime> startDate;
+  Rxn<DateTime> endDate;
+  RxString weeklyCompletion;
+  RxString hoursPerWeek;
+  RxBool isCustomWeeklyCompletion;
+  RxBool isCustomHoursPerWeek;
 
   TaskDescription({
-    String description = '',
-    String selectedAssistant = '',
-    DateTime? dueDate,
-  }) {
-    this.description.value = description;
-    this.selectedAssistant.value = selectedAssistant;
-    this.dueDate.value = dueDate;
-  }
+    required this.description,
+    required this.selectedAssistant,
+    required this.startDate,
+    required this.endDate,
+    required this.weeklyCompletion,
+    required this.hoursPerWeek,
+    required this.isCustomWeeklyCompletion,
+    required this.isCustomHoursPerWeek,
+  });
 }

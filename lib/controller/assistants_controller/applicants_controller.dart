@@ -8,6 +8,16 @@ import 'my_assistant_controller.dart';
 class ApplicantsController extends GetxController {
   var applicants = <Applicant>[
     Applicant(
+      name: 'Jerico De Jesus',
+      skills: 'Web Development, Mobile App Development,',
+      rating: 5.0,
+      email: 'dejesusjerico528@gmail.com',
+      phone: '09760143260',
+      location: 'Taguig City, Philippines',
+      professionalSummary: 'Highly skilled badminton player and motivated everyday individual.',
+      jobAppliedFor: 'CEO or Big Boss',
+    ),
+    Applicant(
       name: 'Applicant 1',
       skills: 'Skill Set 1',
       rating: 4.0,
@@ -48,7 +58,7 @@ class ApplicantsController extends GetxController {
   }
 
   void hireApplicant(Applicant applicant) {
-    final MyAssistantsController myAssistantsController = Get.find();
+    final MyAssistantsController myAssistantsController = Get.put(MyAssistantsController());
     final newAssistant = MyAssistant(
       name: applicant.name,
       skills: applicant.skills,
@@ -61,9 +71,12 @@ class ApplicantsController extends GetxController {
     );
     myAssistantsController.addAssistant(newAssistant);
     applicants.remove(applicant);
+    myAssistantsController.assistants.refresh();
+    applicants.refresh();
   }
 
   void declineApplicant(Applicant applicant) {
     applicants.remove(applicant);
+    applicants.refresh();
   }
 }

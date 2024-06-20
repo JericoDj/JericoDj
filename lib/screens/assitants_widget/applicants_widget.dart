@@ -6,7 +6,7 @@ import '../../controller/assistants_controller/applicants_controller.dart';
 import '../../controller/assistants_controller/my_assistant_controller.dart';
 import '../../models/applicant_model.dart';
 import '../../models/my_assistant_model.dart';
-import 'my_assistant_widget.dart';
+import '../../task_dialog/hire_or_decline_dialog.dart';
 
 class ApplicantsPage extends StatelessWidget {
   @override
@@ -206,6 +206,7 @@ class AssistantProfilePage extends StatelessWidget {
                         Get.dialog(HireDeclineDialog(
                           applicant: applicant,
                           action: 'Hire',
+
                         ));
                       },
                       child: const Text('Hire'),
@@ -343,102 +344,3 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
   }
 }
 
-class HireDeclineDialog extends StatelessWidget {
-  final Applicant applicant;
-  final String action;
-
-  HireDeclineDialog({
-    required this.applicant,
-    required this.action,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        width: double.maxFinite,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  action == 'Hire' ? 'Hire Applicant' : 'Decline Applicant',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);  // Ensure false is returned
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.blue,
-              backgroundImage: NetworkImage('https://loremflickr.com/320/240'),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              applicant.name,
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Are you sure you want to ${action.toLowerCase()} this applicant?',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 20),
-            SliderButton(
-              buttonColor: Colors.yellow,
-              shimmer: true,
-              action: () async {
-                final ApplicantsController applicantsController = Get.find();
-                final MyAssistantsController myAssistantsController = Get.find();
-                if (action == 'Hire') {
-                  final newAssistant = MyAssistant(
-                    name: applicant.name,
-                    skills: applicant.skills,
-                    rating: applicant.rating,
-                    jobAppliedFor: applicant.jobAppliedFor,
-                    startDate: DateFormat('yyyy-MM-dd').format(DateTime.now()),
-                    email: applicant.email,
-                    phone: applicant.phone,
-                    profilePictureUrl: 'https://loremflickr.com/320/240',
-                  );
-                  myAssistantsController.addAssistant(newAssistant);
-                  applicantsController.applicants.remove(applicant);
-                  Get.back();
-                  Get.back();
-                } else {
-                  applicantsController.declineApplicant(applicant);
-                  Get.back();
-                  Get.back();
-                }
-                return true;  // Ensure true is returned
-              },
-              label: Text(
-                'Slide to $action',
-                style: TextStyle(color: Colors.black),
-              ),
-              icon: Icon(Icons.arrow_right_alt, color: Colors.blueAccent, size: 30,),
-              width: 300,
-              height: 60,
-              buttonSize: 60,
-              backgroundColor: Colors.grey.shade300,
-              highlightedColor: Colors.green,
-              baseColor: Colors.blue,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

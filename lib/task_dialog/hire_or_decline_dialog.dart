@@ -66,13 +66,13 @@ class HireDeclineDialog extends StatelessWidget {
                 final ApplicantsController applicantsController = Get.put(ApplicantsController());
                 if (action == 'Hire') {
                   applicantsController.hireApplicant(applicant);
-                  Get.back(); // Close the dialog
-                  Get.back(); // Go back to the previous page
+
+
+
                 } else {
                   applicantsController.declineApplicant(applicant);
                 }
-                Get.back(); // Close the dialog
-                Get.back(); // Go back to the previous page
+
                 Get.snackbar('Success', 'Applicant ${action == 'Hire' ? 'hired' : 'declined'} successfully',
                   snackPosition: SnackPosition.BOTTOM,
                   backgroundColor: Colors.green,

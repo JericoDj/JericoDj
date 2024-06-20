@@ -69,14 +69,25 @@ class ApplicantsController extends GetxController {
       phone: applicant.phone,
       profilePictureUrl: 'https://loremflickr.com/320/240',
     );
+
     myAssistantsController.addAssistant(newAssistant);
     applicants.remove(applicant);
+
     myAssistantsController.assistants.refresh();
     applicants.refresh();
+
+
   }
+
+
+
 
   void declineApplicant(Applicant applicant) {
     applicants.remove(applicant);
     applicants.refresh();
+
+
+
   }
+
 }

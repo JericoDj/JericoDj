@@ -7,6 +7,8 @@ import 'package:samplemobileapp/screens/profile_page.dart';
 import 'package:samplemobileapp/screens/reports_page.dart';
 import 'package:samplemobileapp/screens/tasks_page.dart';
 
+import '../screens/assitants_widget/my_assistant_widget.dart';
+
 class NavigationBarMenu extends StatelessWidget {
   const NavigationBarMenu({super.key});
 

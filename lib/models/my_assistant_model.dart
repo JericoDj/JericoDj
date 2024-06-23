@@ -1,4 +1,4 @@
-class  MyAssistant {
+class MyAssistant {
   String name;
   String skills;
   double rating;
@@ -7,6 +7,9 @@ class  MyAssistant {
   String email;
   String phone;
   String profilePictureUrl;
+  String? dateHired; // Nullable date fields
+  String? dateFinishedContract; // Nullable date fields
+  String? review; // Nullable review field
 
   MyAssistant({
     required this.name,
@@ -17,5 +20,8 @@ class  MyAssistant {
     required this.email,
     required this.phone,
     required this.profilePictureUrl,
+    this.dateHired,
+    this.dateFinishedContract,
+    this.review,
   });
 }

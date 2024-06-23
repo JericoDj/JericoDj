@@ -1,17 +1,18 @@
 import 'package:get/get.dart';
+import '../../models/past_assistant_model.dart';
 
 class PastAssistantsController extends GetxController {
   var pastAssistants = <PastAssistant>[].obs;
-}
 
-class PastAssistant {
-  String name;
-  String skills;
-  double rating;
+  void addPastAssistant(PastAssistant pastAssistant) {
+    pastAssistants.add(pastAssistant);
+  }
 
-  PastAssistant({
-    required this.name,
-    required this.skills,
-    required this.rating,
-  });
+  void reviewAssistant(PastAssistant pastAssistant, String review) {
+    final index = pastAssistants.indexOf(pastAssistant);
+    if (index != -1) {
+      pastAssistants[index].review = review;
+      pastAssistants.refresh();
+    }
+  }
 }

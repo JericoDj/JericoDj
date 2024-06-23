@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/assistants_controller/job_posting_controller.dart';
+import 'package:samplemobileapp/screens/mypast_assistant_page.dart';
+import '../controller/assistants_controller/my_assistant_controller.dart';
+import '../controller/assistants_controller/past_assistant_controller.dart';
 import 'assitants_widget/my_assistant_widget.dart';
 import 'assitants_widget/past_assistant_widget.dart';
 import 'hire_assistant_page.dart';
@@ -11,11 +13,12 @@ class AssistantsController extends GetxController {
 }
 
 class AssistantsPage extends StatelessWidget {
-  const AssistantsPage({super.key});
+  const AssistantsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final AssistantsController assistantsController = Get.put(AssistantsController());
+    final PastAssistantsController pastAssistantsController = Get.put(PastAssistantsController());
 
     return Scaffold(
       appBar: AppBar(

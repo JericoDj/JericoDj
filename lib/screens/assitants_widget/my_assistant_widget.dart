@@ -61,9 +61,9 @@ class MyAssistantsPage extends StatelessWidget {
                           const SizedBox(width: 5),
                           ElevatedButton(
                             onPressed: () {
-                              // Message action
+                              myAssistantsController.moveToPastAssistants(assistant);
                             },
-                            child: const Text('Message'),
+                            child: const Text('Move to Past'),
                           ),
                         ],
                       ),
@@ -133,27 +133,6 @@ class AssistantDetailPage extends StatelessWidget {
                 // View reports action
               },
               child: const Text('View Reports'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Promote/Demote action
-              },
-              child: const Text('Promote/Demote'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Finish contract action
-              },
-              child: const Text('Finish Contract'),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              onPressed: () {
-                // Terminate action
-              },
-              child: const Text('Terminate'),
             ),
           ],
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:slider_button/slider_button.dart';
 import '../../controller/assistants_controller/applicants_controller.dart';
 import '../../controller/assistants_controller/my_assistant_controller.dart';
@@ -13,28 +14,33 @@ class ApplicantsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final ApplicantsController applicantsController = Get.put(ApplicantsController());
 
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Applicants', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Expanded(
-            child: Obx(() => ListView.builder(
-              itemCount: applicantsController.applicants.length,
-              itemBuilder: (context, index) {
-                final applicant = applicantsController.applicants[index];
-                return AssistantTile(
-                  applicant: applicant,
-                  onTap: () {
-                    Get.to(() => AssistantProfilePage(name: applicant.name));
-                  },
-                );
-              },
-            )),
-          ),
-        ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Applicants'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Applicants', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
+            Expanded(
+              child: Obx(() => ListView.builder(
+                itemCount: applicantsController.applicants.length,
+                itemBuilder: (context, index) {
+                  final applicant = applicantsController.applicants[index];
+                  return AssistantTile(
+                    applicant: applicant,
+                    onTap: () {
+                      Get.to(() => AssistantProfilePage(name: applicant.name));
+                    },
+                  );
+                },
+              )),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -54,25 +60,71 @@ class AssistantTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
+        elevation: 5,
         margin: const EdgeInsets.symmetric(vertical: 10),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
-          side: BorderSide(
-            color: applicant.status == 'Scheduled' ? Colors.green : Colors.grey,
-          ),
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(applicant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Row(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage: NetworkImage('https://loremflickr.com/100/100'),
+                    radius: 30,
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(applicant.name ?? 'N/A', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                        const SizedBox(height: 5),
+                        Text(applicant.skills ?? 'N/A', style: const TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  ),
+                  if (applicant.status == 'Scheduled')
+                    Chip(
+                      label: Text(applicant.status ?? 'Scheduled', style: TextStyle(color: Colors.white)),
+                      backgroundColor: Colors.green,
+                    )
+                  else
+                    ElevatedButton(
+                      onPressed: () {
+                        Get.dialog(ScheduleInterviewDialog(name: applicant.name));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.greenAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                      ),
+                      child: const Text('Set Interview',
+                        style: TextStyle(color: Colors.black54),),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Icon(Icons.star, size: 16, color: Colors.orange),
+                  const SizedBox(width: 5),
+                  Text('Rating: ${applicant.rating}', style: const TextStyle(fontSize: 14)),
+                ],
+              ),
               const SizedBox(height: 5),
-              Text(applicant.skills, style: const TextStyle(fontSize: 14)),
-              const SizedBox(height: 5),
-              Text('Rating: ${applicant.rating}', style: const TextStyle(fontSize: 14)),
-              const SizedBox(height: 5),
-              Text('Applied For: ${applicant.jobAppliedFor}', style: const TextStyle(fontSize: 14)),
+              Row(
+                children: [
+                  Icon(Icons.work, size: 16, color: Colors.blue),
+                  const SizedBox(width: 5),
+                  Text('Applied For: ${applicant.jobAppliedFor ?? 'N/A'}', style: const TextStyle(fontSize: 14)),
+                ],
+              ),
             ],
           ),
         ),
@@ -101,100 +153,115 @@ class AssistantProfilePage extends StatelessWidget {
           if (applicant == null) {
             return Center(child: Text('Applicant not found'));
           }
-          return Column(
+          return ListView(
             children: [
               Row(
                 children: [
-                  Expanded(
-                    child: Container(
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor: Colors.blue,
-                        backgroundImage: NetworkImage('https://loremflickr.com/320/240'),
-                      ),
-                    ),
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.blue,
+                    backgroundImage: NetworkImage('https://loremflickr.com/320/240'),
                   ),
+                  const SizedBox(width: 20),
                   Expanded(
-                    flex: 2,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            name,
-                            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Skills: ${applicant.skills}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            'Rating: ${applicant.rating}',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ],
-                      ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          name,
+                          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          'Skills: ${applicant.skills ?? 'N/A'}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          'Rating: ${applicant.rating}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Personal Details',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    Text('Email: ${applicant.email}'),
-                    Text('Phone: ${applicant.phone}'),
-                    Text('Location: ${applicant.location}'),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Professional Summary',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(applicant.professionalSummary),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Job Applied For',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(applicant.jobAppliedFor),
-                  ],
+              Card(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Personal Details',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Text('Email: ${applicant.email ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+                      Text('Phone: ${applicant.phone ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+                      Text('Location: ${applicant.location ?? 'N/A'}', style: TextStyle(fontSize: 16)),
+                    ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Interview Details',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              Card(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Professional Summary',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(applicant.professionalSummary ?? 'N/A', style: TextStyle(fontSize: 16)),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Interview Date: ${applicant.interviewDate ?? 'Not Scheduled'}',
-                    style: TextStyle(fontSize: 16),
+                ),
+              ),
+              Card(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Job Applied For',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(applicant.jobAppliedFor ?? 'N/A', style: TextStyle(fontSize: 16)),
+                    ],
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    'Interview Time: ${applicant.interviewTime ?? 'Not Scheduled'}',
-                    style: TextStyle(fontSize: 16),
+                ),
+              ),
+              Card(
+                margin: const EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Interview Details',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 10),
+                      Text(
+                          'Interview Date: ${applicant.interviewDate ?? 'Not Scheduled'}',
+                          style: TextStyle(fontSize: 16)),
+                      const SizedBox(height: 10),
+                      Text(
+                          'Interview Time: ${applicant.interviewTime ?? 'Not Scheduled'}',
+                          style: TextStyle(fontSize: 16)),
+                    ],
                   ),
-                ],
+                ),
               ),
               const SizedBox(height: 20),
               if (applicant.status == 'Scheduled')
@@ -206,7 +273,6 @@ class AssistantProfilePage extends StatelessWidget {
                         Get.dialog(HireDeclineDialog(
                           applicant: applicant,
                           action: 'Hire',
-
                         ));
                       },
                       child: const Text('Hire'),
@@ -257,18 +323,10 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
 
-  void _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2025),
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      selectedDate = selectedDay;
+    });
   }
 
   void _selectTime(BuildContext context) async {
@@ -299,7 +357,7 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Schedule Interview',
+                  'Set Interview',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
@@ -311,22 +369,66 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
               ],
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => _selectDate(context),
-              child: Text('Select Date'),
+            TableCalendar(
+              firstDay: DateTime.now(),
+              lastDay: DateTime(2025),
+              focusedDay: selectedDate,
+              selectedDayPredicate: (day) {
+                return isSameDay(selectedDate, day);
+              },
+              onDaySelected: _onDaySelected,
+              calendarStyle: CalendarStyle(
+                selectedDecoration: BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+                todayDecoration: BoxDecoration(
+                  color: Colors.green,
+                  shape: BoxShape.circle,
+                ),
+              ),
             ),
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () => _selectTime(context),
-              child: Text('Select Time'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              child: const Text(
+                'Select Time',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 20),
-            Text(
-              'Selected Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Selected Date:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  DateFormat('yyyy-MM-dd').format(selectedDate),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
             const SizedBox(height: 10),
-            Text(
-              'Selected Time: ${selectedTime.format(context)}',
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Selected Time:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  selectedTime.format(context),
+                  style: TextStyle(fontSize: 16),
+                ),
+              ],
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -335,7 +437,13 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
                 applicantsController.scheduleInterview(widget.name, selectedDate, selectedTime);
                 Navigator.of(context).pop(true);  // Ensure true is returned
               },
-              child: const Text('Schedule Interview'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+              ),
+              child: const Text('Set Interview'),
             ),
           ],
         ),
@@ -343,4 +451,3 @@ class _ScheduleInterviewDialogState extends State<ScheduleInterviewDialog> {
     );
   }
 }
-

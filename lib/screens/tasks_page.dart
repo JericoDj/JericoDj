@@ -52,7 +52,7 @@ class TasksOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TasksController tasksController = Get.find();
+    final TasksController tasksController = Get.put(TasksController());
 
     return Obx(() => ListView.builder(
       padding: const EdgeInsets.all(20),

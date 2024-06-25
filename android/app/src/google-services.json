@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "171994189471",
+    "firebase_url": "https://sourcefully-48e2a-default-rtdb.firebaseio.com",
+    "project_id": "sourcefully-48e2a",
+    "storage_bucket": "sourcefully-48e2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171994189471:android:6bbbbf280407f8096f9caa",
+        "android_client_info": {
+          "package_name": "com.example.sourcefully"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171994189471-7f2p0gj3rne311iuj314b7se8rctmo3m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsaOE0Te3uBX1FX3pV5RJeudxcjsygt0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171994189471-7f2p0gj3rne311iuj314b7se8rctmo3m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:171994189471:android:7d830b6955fad6566f9caa",
+        "android_client_info": {
+          "package_name": "com.leos.virtualassistant.virtual_assistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "171994189471-7f2p0gj3rne311iuj314b7se8rctmo3m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsaOE0Te3uBX1FX3pV5RJeudxcjsygt0A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "171994189471-7f2p0gj3rne311iuj314b7se8rctmo3m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

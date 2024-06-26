@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controller/assistants_controller/job_posting_controller.dart';
+
+import '../../../controller/assistants_controller/job_posting_controller.dart';
+
 
 class JobPostingsPage extends StatelessWidget {
   @override

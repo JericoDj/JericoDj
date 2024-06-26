@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:samplemobileapp/screens/messages_page.dart';
+
+import '../../utils/colors/colors.dart';
+import '../messages_page/messages_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Virtual Assistant App'),
+        title: const Text('Virtual Assistant App',style: TextStyle(color: AppColors.darkText),),
+        backgroundColor: darkTheme ? AppColors.darkBackground: AppColors.darkBackground,
         actions: [
           IconButton(
-            icon: const Icon(Icons.message),
+            icon: const Icon(Icons.message,color: AppColors.darkText,),
             onPressed: () {
               Get.to(() => const MessagesPage());
             },
@@ -19,14 +24,14 @@ class HomePage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          AssistantsSection(),
-          WelcomeSection(),
-          VANichesSection(),
-          RecentActivities(),
-          PerformanceMetrics(),
-          ServiceHighlights(),
-          ClientTestimonials(),
-          QuickAccessLinks(),
+          AssistantsSection(darkTheme: darkTheme),
+          WelcomeSection(darkTheme: darkTheme),
+          VANichesSection(darkTheme: darkTheme),
+          RecentActivities(darkTheme: darkTheme),
+          PerformanceMetrics(darkTheme: darkTheme),
+          ServiceHighlights(darkTheme: darkTheme),
+          ClientTestimonials(darkTheme: darkTheme),
+          QuickAccessLinks(darkTheme: darkTheme),
         ],
       ),
     );
@@ -34,15 +39,19 @@ class HomePage extends StatelessWidget {
 }
 
 class AssistantsSection extends StatelessWidget {
+  final bool darkTheme;
+
+  AssistantsSection({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          const Text(
+          Text(
             'Your Assistants',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText),
           ),
           const SizedBox(height: 10),
           SingleChildScrollView(
@@ -54,6 +63,7 @@ class AssistantsSection extends StatelessWidget {
                   name: 'Assistant 1',
                   tasksUpdated: 3,
                   taskStatus: 'Active',
+                  darkTheme: darkTheme,
                   onTap: () {
                     // Navigate to Assistant 1 details or tasks
                   },
@@ -63,6 +73,7 @@ class AssistantsSection extends StatelessWidget {
                   name: 'Assistant 2',
                   tasksUpdated: 1,
                   taskStatus: 'Pending',
+                  darkTheme: darkTheme,
                   onTap: () {
                     // Navigate to Assistant 2 details or tasks
                   },
@@ -72,6 +83,7 @@ class AssistantsSection extends StatelessWidget {
                   name: 'Assistant 3',
                   tasksUpdated: 5,
                   taskStatus: 'Done',
+                  darkTheme: darkTheme,
                   onTap: () {
                     // Navigate to Assistant 3 details or tasks
                   },
@@ -81,6 +93,7 @@ class AssistantsSection extends StatelessWidget {
                   name: 'Assistant 4',
                   tasksUpdated: 0,
                   taskStatus: 'No Task',
+                  darkTheme: darkTheme,
                   onTap: () {
                     // Navigate to Assistant 4 details or tasks
                   },
@@ -90,6 +103,7 @@ class AssistantsSection extends StatelessWidget {
                   name: 'Assistant 5',
                   tasksUpdated: 2,
                   taskStatus: 'Updated',
+                  darkTheme: darkTheme,
                   onTap: () {
                     // Navigate to Assistant 5 details or tasks
                   },
@@ -97,6 +111,7 @@ class AssistantsSection extends StatelessWidget {
                 AssistantAvatar(
                   icon: Icons.person_add,
                   name: 'Hire Assistant',
+                  darkTheme: darkTheme,
                   onTap: () {
                     // Navigate to hire assistant
                   },
@@ -118,6 +133,7 @@ class AssistantAvatar extends StatelessWidget {
   final VoidCallback onTap;
   final int? tasksUpdated;
   final String? taskStatus;
+  final bool darkTheme;
 
   AssistantAvatar({
     this.imageUrl,
@@ -126,6 +142,7 @@ class AssistantAvatar extends StatelessWidget {
     required this.onTap,
     this.tasksUpdated,
     this.taskStatus,
+    required this.darkTheme,
   });
 
   LinearGradient _getGradient() {
@@ -200,7 +217,7 @@ class AssistantAvatar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(name, style: const TextStyle(fontSize: 14)),
+                Text(name, style: TextStyle(fontSize: 14, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
               ],
             ),
             if (tasksUpdated != null)
@@ -250,6 +267,7 @@ class AssistantAvatar extends StatelessWidget {
 }
 
 class VANichesSection extends StatelessWidget {
+  final bool darkTheme;
   final List<String> vaNiches = [
     'General Virtual Assistant',
     'Social Media Management',
@@ -259,6 +277,8 @@ class VANichesSection extends StatelessWidget {
     'Marketing VA',
   ];
 
+  VANichesSection({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -266,12 +286,12 @@ class VANichesSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('VA Niches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('VA Niches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
           const SizedBox(height: 10),
           Wrap(
             spacing: 10,
             runSpacing: 10,
-            children: vaNiches.map((niche) => VAContainer(niche: niche)).toList(),
+            children: vaNiches.map((niche) => VAContainer(niche: niche, darkTheme: darkTheme)).toList(),
           ),
         ],
       ),
@@ -281,8 +301,9 @@ class VANichesSection extends StatelessWidget {
 
 class VAContainer extends StatelessWidget {
   final String niche;
+  final bool darkTheme;
 
-  const VAContainer({required this.niche});
+  const VAContainer({required this.niche, required this.darkTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -290,37 +311,55 @@ class VAContainer extends StatelessWidget {
       width: (MediaQuery.of(context).size.width - 60) / 2,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.blueAccent,
+        gradient: LinearGradient(
+          colors: [
+            darkTheme ? AppColors.primary.withOpacity(0.8) : AppColors.paletteGreen3,
+            darkTheme ? AppColors.darkBackground.withOpacity(0.8) : AppColors.paletteCyan3,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         niche,
-        style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, color: AppColors.darkText, fontWeight: FontWeight.bold),
       ),
     );
   }
 }
 
 class WelcomeSection extends StatelessWidget {
+  final bool darkTheme;
+
+  const WelcomeSection({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Colors.blueAccent,
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            darkTheme ? AppColors.primary.withOpacity(0.8) : AppColors.paletteGreen2,
+            darkTheme ? AppColors.darkBackground.withOpacity(0.8) : AppColors.paletteCyan2 ,
+          ],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
       ),
       child: Column(
         children: const [
           Text(
             'Welcome to Your Virtual Assistant Dashboard',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.darkText),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
           Text(
             'Manage your tasks efficiently with our professional virtual assistants.',
-            style: TextStyle(fontSize: 16, color: Colors.white),
+            style: TextStyle(fontSize: 16, color: AppColors.darkText),
             textAlign: TextAlign.center,
           ),
         ],
@@ -330,21 +369,25 @@ class WelcomeSection extends StatelessWidget {
 }
 
 class RecentActivities extends StatelessWidget {
+  final bool darkTheme;
+
+  const RecentActivities({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('Recent Activities', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          ActivityTile(
+        children: [
+          Text('Recent Activities', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+          const SizedBox(height: 10),
+          const ActivityTile(
             title: 'Task: Design Logo',
             description: 'Completed by VA - Jane Smith',
             time: '2 hours ago',
           ),
-          ActivityTile(
+          const ActivityTile(
             title: 'Task: Data Entry',
             description: 'In progress by VA - John Brown',
             time: '5 hours ago',
@@ -379,20 +422,24 @@ class ActivityTile extends StatelessWidget {
 }
 
 class PerformanceMetrics extends StatelessWidget {
+  final bool darkTheme;
+
+  const PerformanceMetrics({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('Performance Metrics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          MetricTile(
+        children: [
+          Text('Performance Metrics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+          const SizedBox(height: 10),
+          const MetricTile(
             metric: 'Tasks Completed',
             value: '120',
           ),
-          MetricTile(
+          const MetricTile(
             metric: 'Hours Logged',
             value: '250',
           ),
@@ -423,6 +470,7 @@ class MetricTile extends StatelessWidget {
 }
 
 class ServiceHighlights extends StatelessWidget {
+  final bool darkTheme;
   final List<String> services = const [
     'Advanced Matching Algorithm',
     'Integrated Communication Tools',
@@ -434,6 +482,8 @@ class ServiceHighlights extends StatelessWidget {
     'Priority Task Handling',
   ];
 
+  ServiceHighlights({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -441,9 +491,9 @@ class ServiceHighlights extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Service Highlights', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          Text('Service Highlights', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
           const SizedBox(height: 10),
-          ...services.map((service) => ServiceTile(service: service)).toList(),
+          ...services.map((service) => ServiceTile(service: service, darkTheme: darkTheme)).toList(),
         ],
       ),
     );
@@ -452,35 +502,41 @@ class ServiceHighlights extends StatelessWidget {
 
 class ServiceTile extends StatelessWidget {
   final String service;
+  final bool darkTheme;
 
   const ServiceTile({
     required this.service,
+    required this.darkTheme,
   });
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: Text(service, style: const TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(service, style: TextStyle(fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
     );
   }
 }
 
 class ClientTestimonials extends StatelessWidget {
+  final bool darkTheme;
+
+  const ClientTestimonials({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('Client Testimonials', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
-          TestimonialTile(
+        children: [
+          Text('Client Testimonials', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+          const SizedBox(height: 10),
+          const TestimonialTile(
             clientName: 'Alice Johnson',
             feedback: 'Excellent service! My virtual assistant has been a game changer for my business.',
           ),
-          TestimonialTile(
+          const TestimonialTile(
             clientName: 'Michael Lee',
             feedback: 'Highly professional and efficient. Highly recommend!',
           ),
@@ -511,6 +567,10 @@ class TestimonialTile extends StatelessWidget {
 }
 
 class QuickAccessLinks extends StatelessWidget {
+  final bool darkTheme;
+
+  const QuickAccessLinks({required this.darkTheme});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -521,18 +581,27 @@ class QuickAccessLinks extends StatelessWidget {
             onPressed: () {
               // Navigate to task creation page
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: darkTheme ? AppColors.buttonGradientStart : AppColors.buttonGradientEnd,
+            ),
             child: const Text('Create a New Task'),
           ),
           ElevatedButton(
             onPressed: () {
               // Navigate to support/contact page
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: darkTheme ? AppColors.buttonGradientStart : AppColors.buttonGradientEnd,
+            ),
             child: const Text('Contact Support'),
           ),
           ElevatedButton(
             onPressed: () {
               // Navigate to reports/analytics page
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: darkTheme ? AppColors.buttonGradientStart : AppColors.buttonGradientEnd,
+            ),
             child: const Text('View Reports'),
           ),
         ],

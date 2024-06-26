@@ -1,7 +1,8 @@
+import 'package:Sourcefully/widgets/task_dialog/task_details_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:samplemobileapp/task_dialog/task_details_dialog.dart';
+
 import '../../controller/task_controller/task_controller.dart';
 import '../../models/my_assistant_model.dart';
 

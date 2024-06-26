@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../controller/assistants_controller/past_assistant_controller.dart';
+import '../../../controller/assistants_controller/past_assistant_controller.dart';
 import 'assitants_widget/past_assistant_widget.dart';
+
 
 class PastAssistantsPage extends StatelessWidget {
   @override

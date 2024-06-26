@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:slider_button/slider_button.dart';
-import '../../controller/assistants_controller/applicants_controller.dart';
-import '../../controller/assistants_controller/my_assistant_controller.dart';
-import '../../models/applicant_model.dart';
-import '../../models/my_assistant_model.dart';
-import '../../task_dialog/hire_or_decline_dialog.dart';
+
+import '../../../controller/assistants_controller/applicants_controller.dart';
+import '../../../models/applicant_model.dart';
+
+import '../../../widgets/task_dialog/hire_or_decline_dialog.dart';
 
 class ApplicantsPage extends StatelessWidget {
   @override

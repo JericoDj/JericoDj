@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../controller/assistants_controller/my_assistant_controller.dart';
-import '../controller/task_controller/task_controller.dart';
-import '../models/my_assistant_model.dart';
-import '../task_dialog/create_task_dialog.dart';
-import 'messages_page.dart';
+import '../../controller/assistants_controller/my_assistant_controller.dart';
+import '../../controller/task_controller/task_controller.dart';
+import '../../models/my_assistant_model.dart';
+
+import '../../widgets/task_dialog/create_task_dialog.dart';
+import '../messages_page/messages_page.dart';
 
 class TasksPage extends StatelessWidget {
   final MyAssistant? assistant;

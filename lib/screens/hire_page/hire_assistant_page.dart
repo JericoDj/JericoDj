@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../controller/assistants_controller/job_posting_controller.dart';
-import 'assitants_widget/applicants_widget.dart';
-import 'assitants_widget/job_posting_widget.dart';
-import 'messages_page.dart';
+import '../../controller/assistants_controller/job_posting_controller.dart';
+
+import '../assistant_page/assitants_widget/applicants_widget.dart';
+import '../assistant_page/assitants_widget/job_posting_widget.dart';
+import '../messages_page/messages_page.dart';
 
 class HireAssistantsController extends GetxController {
   var selectedIndex = 0.obs;

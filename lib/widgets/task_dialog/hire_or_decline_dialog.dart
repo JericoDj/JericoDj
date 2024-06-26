@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:slider_button/slider_button.dart';
-import '../controller/assistants_controller/applicants_controller.dart';
-import '../controller/assistants_controller/my_assistant_controller.dart';
-import '../models/applicant_model.dart';
+
+import '../../controller/assistants_controller/applicants_controller.dart';
+import '../../models/applicant_model.dart';
+
 
 class HireDeclineDialog extends StatelessWidget {
   final Applicant applicant;

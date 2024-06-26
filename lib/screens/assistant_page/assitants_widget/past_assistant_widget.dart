@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../controller/assistants_controller/past_assistant_controller.dart';
-import '../../models/past_assistant_model.dart';
+import '../../../controller/assistants_controller/past_assistant_controller.dart';
+import '../../../models/past_assistant_model.dart';
+
 
 class PastAssistantWidget extends StatelessWidget {
   final PastAssistant pastAssistant;

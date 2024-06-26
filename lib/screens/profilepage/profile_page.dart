@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:samplemobileapp/screens/messages_page.dart';
-import 'package:samplemobileapp/screens/profile_widgets/addresses_widget.dart';
-import 'package:samplemobileapp/screens/profile_widgets/other_page_widget.dart';
-import 'package:samplemobileapp/screens/profile_widgets/payment_methods_widget.dart';
-import 'package:samplemobileapp/screens/profile_widgets/support_widget.dart';
+
+
+import '../messages_page/messages_page.dart';
+import '../profile_widgets/addresses_widget.dart';
+import '../profile_widgets/other_page_widget.dart';
+import '../profile_widgets/payment_methods_widget.dart';
+import '../profile_widgets/support_widget.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

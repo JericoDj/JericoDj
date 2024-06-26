@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
-import 'package:samplemobileapp/screens/messages_page.dart';
+
+import '../messages_page/messages_page.dart';
+
 
 class ReportsPage extends StatelessWidget {
   const ReportsPage({super.key});

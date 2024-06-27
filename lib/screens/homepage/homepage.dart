@@ -1,12 +1,14 @@
-import 'package:Sourcefully/screens/assistant_page/assitants_widget/job_posting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controller/assistants_controller/my_assistant_controller.dart';
+import '../../data/homepage_datas/va_niche_data/va_niche_data.dart';
 import '../../utils/colors/colors.dart';
+import '../assistant_page/assitants_widget/job_posting_widget.dart';
 import '../assistant_page/my_assistant_widget/my_assistant_widget.dart';
 import '../messages_page/messages_page.dart';
 import 'homepage_widgets/assistants_widgets_avatar/assintant_task_page.dart';
+import 'homepage_widgets/vasection.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -14,34 +16,33 @@ class HomePage extends StatelessWidget {
     bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
+        appBar: AppBar(
         title: const Text('Virtual Assistant App', style: TextStyle(color: AppColors.darkText)),
-        backgroundColor: darkTheme ? AppColors.darkBackground : AppColors.darkBackground,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.message, color: AppColors.darkText),
-            onPressed: () {
-              Get.to(() => const MessagesPage());
-            },
-          ),
-        ],
-      ),
-      body: ListView(
-        children: [
-          AssistantsSection(darkTheme: darkTheme),
-          WelcomeSection(darkTheme: darkTheme),
-          VANichesSection(darkTheme: darkTheme),
-          RecentActivities(darkTheme: darkTheme),
-          PerformanceMetrics(darkTheme: darkTheme),
-          ServiceHighlights(darkTheme: darkTheme),
-          ClientTestimonials(darkTheme: darkTheme),
-          QuickAccessLinks(darkTheme: darkTheme),
-        ],
-      ),
+    backgroundColor: darkTheme ? AppColors.darkBackground : AppColors.darkBackground,
+    actions: [
+    IconButton(
+        icon: const Icon(Icons.message, color: AppColors.darkText),
+      onPressed: () {
+        Get.to(() => const MessagesPage());
+      },
+    ),
+    ],
+    ),
+    body: ListView(
+    children: [
+    AssistantsSection(darkTheme: darkTheme),
+    WelcomeSection(darkTheme: darkTheme),
+    VANichesSection(darkTheme: darkTheme), // Use the VANichesSection here
+    RecentActivities(darkTheme: darkTheme),
+    PerformanceMetrics(darkTheme: darkTheme),
+    ServiceHighlights(darkTheme: darkTheme),
+    ClientTestimonials(darkTheme: darkTheme),
+    QuickAccessLinks(darkTheme: darkTheme),
+    ],
+    ),
     );
   }
 }
-
 
 class AssistantsSection extends StatelessWidget {
   final bool darkTheme;
@@ -99,9 +100,6 @@ class AssistantsSection extends StatelessWidget {
     );
   }
 }
-
-
-
 
 class AssistantAvatar extends StatelessWidget {
   final String? imageUrl;
@@ -243,69 +241,6 @@ class AssistantAvatar extends StatelessWidget {
   }
 }
 
-class VANichesSection extends StatelessWidget {
-  final bool darkTheme;
-  final List<String> vaNiches = [
-    'General Virtual Assistant',
-    'Social Media Management',
-    'Computer Technical VA',
-    'Graphical Creation VA',
-    'Administrative VA',
-    'Marketing VA',
-  ];
-
-  VANichesSection({required this.darkTheme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('VA Niches', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
-          const SizedBox(height: 10),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: vaNiches.map((niche) => VAContainer(niche: niche, darkTheme: darkTheme)).toList(),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class VAContainer extends StatelessWidget {
-  final String niche;
-  final bool darkTheme;
-
-  const VAContainer({required this.niche, required this.darkTheme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: (MediaQuery.of(context).size.width - 60) / 2,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            darkTheme ? AppColors.primary.withOpacity(0.8) : AppColors.paletteGreen3,
-            darkTheme ? AppColors.darkBackground.withOpacity(0.8) : AppColors.paletteCyan3,
-          ],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Text(
-        niche,
-        style: const TextStyle(fontSize: 16, color: AppColors.darkText, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-}
-
 class WelcomeSection extends StatelessWidget {
   final bool darkTheme;
 
@@ -319,7 +254,7 @@ class WelcomeSection extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             darkTheme ? AppColors.primary.withOpacity(0.8) : AppColors.paletteGreen2,
-            darkTheme ? AppColors.darkBackground.withOpacity(0.8) : AppColors.paletteCyan2 ,
+            darkTheme ? AppColors.darkBackground.withOpacity(0.8) : AppColors.paletteCyan2,
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

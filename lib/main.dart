@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: LightTheme.theme, // Apply the light theme
       darkTheme: DarkTheme.theme, // Apply the dark theme
       themeMode: ThemeMode.system, // Use system theme mode
-      home: SplashScreen(),
+      home: NavigationBarMenu(),
     );
   }
 }

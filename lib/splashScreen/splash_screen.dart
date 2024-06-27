@@ -38,7 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [AppColors.paletteCyan2, AppColors.paletteYellow2],
+            colors: [AppColors.paletteYellow2, AppColors.paletteCyan2],
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
           ),

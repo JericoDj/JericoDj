@@ -18,4 +18,9 @@ class Task {
     required this.priority,
     this.dueDate,
   });
+
+  bool isTodayTask() {
+    final now = DateTime.now();
+    return startDate?.day == now.day && startDate?.month == now.month && startDate?.year == now.year;
+  }
 }

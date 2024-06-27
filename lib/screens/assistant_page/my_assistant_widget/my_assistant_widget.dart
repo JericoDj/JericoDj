@@ -4,9 +4,7 @@ import 'package:get/get.dart';
 import '../../../controller/assistants_controller/my_assistant_controller.dart';
 import '../../../controller/task_controller/task_controller.dart';
 import '../../../models/my_assistant_model.dart';
-
 import '../../../widgets/task_dialog/create_task_dialog.dart';
-
 
 class MyAssistantsPage extends StatelessWidget {
   @override
@@ -51,6 +49,8 @@ class MyAssistantsPage extends StatelessWidget {
                                 Text(assistant.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                                 const SizedBox(height: 5),
                                 Text('Skills: ${assistant.skills}', style: const TextStyle(fontSize: 14)),
+                                const SizedBox(height: 5),
+                                Text('Status: ${assistant.taskStatus}', style: const TextStyle(fontSize: 14)),
                               ],
                             ),
                           ),
@@ -116,6 +116,10 @@ class AssistantDetailPage extends StatelessWidget {
             Text('Email: ${assistant.email}', style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 5),
             Text('Phone: ${assistant.phone}', style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 5),
+            Text('Tasks Updated: ${assistant.tasksUpdated}', style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 5),
+            Text('Task Status: ${assistant.taskStatus}', style: const TextStyle(fontSize: 18)),
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {

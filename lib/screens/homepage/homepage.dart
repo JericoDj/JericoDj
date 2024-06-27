@@ -1,8 +1,12 @@
+import 'package:Sourcefully/screens/assistant_page/assitants_widget/job_posting_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../controller/assistants_controller/my_assistant_controller.dart';
 import '../../utils/colors/colors.dart';
+import '../assistant_page/my_assistant_widget/my_assistant_widget.dart';
 import '../messages_page/messages_page.dart';
+import 'homepage_widgets/assistants_widgets_avatar/assintant_task_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -11,11 +15,11 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Virtual Assistant App',style: TextStyle(color: AppColors.darkText),),
-        backgroundColor: darkTheme ? AppColors.darkBackground: AppColors.darkBackground,
+        title: const Text('Virtual Assistant App', style: TextStyle(color: AppColors.darkText)),
+        backgroundColor: darkTheme ? AppColors.darkBackground : AppColors.darkBackground,
         actions: [
           IconButton(
-            icon: const Icon(Icons.message,color: AppColors.darkText,),
+            icon: const Icon(Icons.message, color: AppColors.darkText),
             onPressed: () {
               Get.to(() => const MessagesPage());
             },
@@ -38,6 +42,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
+
 class AssistantsSection extends StatelessWidget {
   final bool darkTheme;
 
@@ -45,9 +50,12 @@ class AssistantsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MyAssistantsController myAssistantsController = Get.put(MyAssistantsController());
+
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(10),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Your Assistants',
@@ -56,75 +64,44 @@ class AssistantsSection extends StatelessWidget {
           const SizedBox(height: 10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: Row(
+            child: Obx(() => Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AssistantAvatar(
-                  imageUrl: 'https://loremflickr.com/100/100?random=1',
-                  name: 'Assistant 1',
-                  tasksUpdated: 3,
-                  taskStatus: 'Active',
-                  darkTheme: darkTheme,
-                  onTap: () {
-                    // Navigate to Assistant 1 details or tasks
-                  },
-                ),
-                AssistantAvatar(
-                  imageUrl: 'https://loremflickr.com/100/100?random=2',
-                  name: 'Assistant 2',
-                  tasksUpdated: 1,
-                  taskStatus: 'Pending',
-                  darkTheme: darkTheme,
-                  onTap: () {
-                    // Navigate to Assistant 2 details or tasks
-                  },
-                ),
-                AssistantAvatar(
-                  imageUrl: 'https://loremflickr.com/100/100?random=3',
-                  name: 'Assistant 3',
-                  tasksUpdated: 5,
-                  taskStatus: 'Done',
-                  darkTheme: darkTheme,
-                  onTap: () {
-                    // Navigate to Assistant 3 details or tasks
-                  },
-                ),
-                AssistantAvatar(
-                  imageUrl: 'https://loremflickr.com/100/100?random=4',
-                  name: 'Assistant 4',
-                  tasksUpdated: 0,
-                  taskStatus: 'No Task',
-                  darkTheme: darkTheme,
-                  onTap: () {
-                    // Navigate to Assistant 4 details or tasks
-                  },
-                ),
-                AssistantAvatar(
-                  imageUrl: 'https://loremflickr.com/100/100?random=5',
-                  name: 'Assistant 5',
-                  tasksUpdated: 2,
-                  taskStatus: 'Updated',
-                  darkTheme: darkTheme,
-                  onTap: () {
-                    // Navigate to Assistant 5 details or tasks
-                  },
-                ),
                 AssistantAvatar(
                   icon: Icons.person_add,
                   name: 'Hire Assistant',
                   darkTheme: darkTheme,
                   onTap: () {
-                    // Navigate to hire assistant
+                    showDialog(
+                      context: context,
+                      barrierColor: Colors.black.withOpacity(0.5), // Set the transparency here
+                      builder: (BuildContext context) {
+                        return HireAssistantDialog();
+                      },
+                    );
                   },
                 ),
-                // Add more assistants if needed
+                ...myAssistantsController.assistants.map((assistant) => AssistantAvatar(
+                  imageUrl: assistant.profilePictureUrl,
+                  name: assistant.name,
+                  tasksUpdated: assistant.tasksUpdated,
+                  taskStatus: assistant.taskStatus,
+                  darkTheme: darkTheme,
+                  onTap: () {
+                    Get.to(() => AssistantTasksPage(assistant: assistant));
+                  },
+                )).toList(),
               ],
-            ),
+            )),
           ),
         ],
       ),
     );
   }
 }
+
+
+
 
 class AssistantAvatar extends StatelessWidget {
   final String? imageUrl;
@@ -206,18 +183,18 @@ class AssistantAvatar extends StatelessWidget {
                     padding: const EdgeInsets.all(2), // Space between the border and the avatar
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: 30,
+                      radius: 40,
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
-                        radius: 26,
+                        radius: 38,
                         backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
-                        child: icon != null ? Icon(icon, size: 30, color: Colors.grey) : null,
+                        child: icon != null ? Icon(icon, size: 40, color: Colors.grey) : null,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(name, style: TextStyle(fontSize: 14, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+                Text(name, style: TextStyle(fontSize: 10, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
               ],
             ),
             if (tasksUpdated != null)

@@ -6,8 +6,8 @@ import '../../controller/assistants_controller/past_assistant_controller.dart';
 
 import '../hire_page/hire_assistant_page.dart';
 import '../messages_page/messages_page.dart';
-import 'assitants_widget/my_assistant_widget.dart';
-import 'mypast_assistant_page.dart';
+import 'my_assistant_widget/my_assistant_widget.dart';
+import 'my_past_assistant_widget/mypast_assistant_page.dart';
 
 class AssistantsController extends GetxController {
   var selectedIndex = 0.obs;

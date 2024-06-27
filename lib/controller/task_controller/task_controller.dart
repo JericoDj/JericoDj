@@ -1,5 +1,6 @@
-import 'package:get/get.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class TasksController extends GetxController {
   final taskTitleController = TextEditingController();
@@ -55,6 +56,9 @@ class TasksController extends GetxController {
           isCustomHoursPerWeek: d.isCustomHoursPerWeek,
         )).toList(),
         dueDate: selectedDueDate.value,
+        assignedAssistant: taskDescriptions.first.selectedAssistant.value, // Example: providing the first selected assistant
+        priority: 'Normal', // Example priority
+        recurrence: 'None', // Example recurrence
       ));
       _clearFields();
       return true;
@@ -115,18 +119,56 @@ class TasksController extends GetxController {
     selectedDueDate.value = null;
     errorMessage.value = '';
   }
+
+  List<Task> getTasksForAssistant(String assistantName) {
+    return tasks.where((task) => task.descriptions.any((description) => description.selectedAssistant.value == assistantName)).toList();
+  }
+
+  List<Task> getTasksForToday(String assistantName) {
+    final now = DateTime.now();
+    return tasks.where((task) =>
+    task.descriptions.any((description) => description.selectedAssistant.value == assistantName) &&
+        task.descriptions.any((description) => description.startDate.value?.day == now.day && description.startDate.value?.month == now.month && description.startDate.value?.year == now.year)
+    ).toList();
+  }
+
+  List<Task> getFinishedTasksForAssistant(String assistantName) {
+    return tasks.where((task) =>
+    task.descriptions.any((description) => description.selectedAssistant.value == assistantName) &&
+        task.priority == 'finished'
+    ).toList();
+  }
 }
 
 class Task {
   String title;
   List<TaskDescription> descriptions;
   DateTime? dueDate;
+  String assignedAssistant;
+  DateTime? startDate;
+  DateTime? endDate;
+  String recurrence;
+  String priority;
 
   Task({
     required this.title,
     required this.descriptions,
+    required this.assignedAssistant,
+    this.startDate,
+    this.endDate,
+    required this.recurrence,
+    required this.priority,
     this.dueDate,
   });
+
+  bool isTodayTask() {
+    final now = DateTime.now();
+    return descriptions.any((description) =>
+    description.startDate.value?.day == now.day &&
+        description.startDate.value?.month == now.month &&
+        description.startDate.value?.year == now.year
+    );
+  }
 }
 
 class TaskDescription {

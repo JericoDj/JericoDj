@@ -8,38 +8,84 @@ import '../assistant_page/assitants_widget/job_posting_widget.dart';
 import '../assistant_page/my_assistant_widget/my_assistant_widget.dart';
 import '../messages_page/messages_page.dart';
 import 'homepage_widgets/assistants_widgets_avatar/assintant_task_page.dart';
+import 'homepage_widgets/va_project_manager_button.dart';
 import 'homepage_widgets/vasection.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    bool darkTheme = MediaQuery.of(context).platformBrightness == Brightness.dark;
+    bool darkTheme =
+        MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-        appBar: AppBar(
-        title: const Text('Virtual Assistant App', style: TextStyle(color: AppColors.darkText)),
-    backgroundColor: darkTheme ? AppColors.darkBackground : AppColors.darkBackground,
-    actions: [
-    IconButton(
-        icon: const Icon(Icons.message, color: AppColors.darkText),
-      onPressed: () {
-        Get.to(() => const MessagesPage());
-      },
-    ),
-    ],
-    ),
-    body: ListView(
-    children: [
-    AssistantsSection(darkTheme: darkTheme),
-    WelcomeSection(darkTheme: darkTheme),
-    VANichesSection(darkTheme: darkTheme), // Use the VANichesSection here
-    RecentActivities(darkTheme: darkTheme),
-    PerformanceMetrics(darkTheme: darkTheme),
-    ServiceHighlights(darkTheme: darkTheme),
-    ClientTestimonials(darkTheme: darkTheme),
-    QuickAccessLinks(darkTheme: darkTheme),
-    ],
-    ),
+      appBar: AppBar(
+        title: ShaderMask(
+          shaderCallback: (Rect bounds) {
+            return LinearGradient(
+              colors: darkTheme
+                  ? [AppColors.primary, AppColors.secondary]
+                  : [AppColors.paletteGreen3, AppColors.paletteCyan3],
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+            ).createShader(bounds);
+          },
+          child: const Text(
+            'Sourcefully',
+
+            style: TextStyle(
+              fontFamily: 'PlaywriteNO',
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1,
+
+              color: Colors.white,
+
+
+            ),
+          ),
+        ),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: darkTheme
+                  ? [AppColors.primary, AppColors.secondary]
+                  : [AppColors.lightBackground, AppColors.lightBackground],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+        actions: [
+          ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return LinearGradient(
+                colors: darkTheme
+                    ? [AppColors.primary, AppColors.secondary]
+                    : [AppColors.paletteGreen3, AppColors.paletteCyan3],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ).createShader(bounds);
+            },
+            child: IconButton(
+              icon: const Icon(Icons.message, color: Colors.white), // This color won't be visible due to the shader mask
+              onPressed: () {
+                Get.to(() => const MessagesPage());
+              },
+            ),
+          ),
+        ],
+      ),
+      body: ListView(
+        children: [
+          AssistantsSection(darkTheme: darkTheme),
+          WelcomeSection(darkTheme: darkTheme),
+          VAProjectManagerContainer(darkTheme: darkTheme),
+          SpecializedVADrawer(darkTheme: darkTheme),
+          RecentActivities(darkTheme: darkTheme),
+          PerformanceMetrics(darkTheme: darkTheme),
+          ServiceHighlights(darkTheme: darkTheme),
+          QuickAccessLinks(darkTheme: darkTheme),
+        ],
+      ),
     );
   }
 }
@@ -51,49 +97,49 @@ class AssistantsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MyAssistantsController myAssistantsController = Get.put(MyAssistantsController());
+    final MyAssistantsController myAssistantsController =
+        Get.put(MyAssistantsController());
 
     return Container(
       padding: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Your Assistants',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText),
-          ),
-          const SizedBox(height: 10),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Obx(() => Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                AssistantAvatar(
-                  icon: Icons.person_add,
-                  name: 'Hire Assistant',
-                  darkTheme: darkTheme,
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      barrierColor: Colors.black.withOpacity(0.5), // Set the transparency here
-                      builder: (BuildContext context) {
-                        return HireAssistantDialog();
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AssistantAvatar(
+                      icon: Icons.person_add,
+                      name: 'Hire Assistant',
+                      darkTheme: darkTheme,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          barrierColor: Colors.black.withOpacity(0.5),
+                          // Set the transparency here
+                          builder: (BuildContext context) {
+                            return HireAssistantDialog();
+                          },
+                        );
                       },
-                    );
-                  },
-                ),
-                ...myAssistantsController.assistants.map((assistant) => AssistantAvatar(
-                  imageUrl: assistant.profilePictureUrl,
-                  name: assistant.name,
-                  tasksUpdated: assistant.tasksUpdated,
-                  taskStatus: assistant.taskStatus,
-                  darkTheme: darkTheme,
-                  onTap: () {
-                    Get.to(() => AssistantTasksPage(assistant: assistant));
-                  },
-                )).toList(),
-              ],
-            )),
+                    ),
+                    ...myAssistantsController.assistants
+                        .map((assistant) => AssistantAvatar(
+                              imageUrl: assistant.profilePictureUrl,
+                              name: assistant.name,
+                              tasksUpdated: assistant.tasksUpdated,
+                              taskStatus: assistant.taskStatus,
+                              darkTheme: darkTheme,
+                              onTap: () {
+                                Get.to(() =>
+                                    AssistantTasksPage(assistant: assistant));
+                              },
+                            ))
+                        .toList(),
+                  ],
+                )),
           ),
         ],
       ),
@@ -178,21 +224,30 @@ class AssistantAvatar extends StatelessWidget {
                     gradient: _getGradient(),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(2), // Space between the border and the avatar
+                    padding: const EdgeInsets.all(2),
+                    // Space between the border and the avatar
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
                       radius: 40,
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
                         radius: 38,
-                        backgroundImage: imageUrl != null ? NetworkImage(imageUrl!) : null,
-                        child: icon != null ? Icon(icon, size: 40, color: Colors.grey) : null,
+                        backgroundImage:
+                            imageUrl != null ? NetworkImage(imageUrl!) : null,
+                        child: icon != null
+                            ? Icon(icon, size: 40, color: Colors.grey)
+                            : null,
                       ),
                     ),
                   ),
                 ),
                 const SizedBox(height: 5),
-                Text(name, style: TextStyle(fontSize: 10, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+                Text(name,
+                    style: TextStyle(
+                        fontSize: 10,
+                        color: darkTheme
+                            ? AppColors.darkText
+                            : AppColors.lightText)),
               ],
             ),
             if (tasksUpdated != null)
@@ -219,7 +274,8 @@ class AssistantAvatar extends StatelessWidget {
                 top: 0,
                 left: -5, // Adjusted position to left outside the container
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     gradient: _getGradient(),
                     borderRadius: BorderRadius.circular(12),
@@ -230,7 +286,8 @@ class AssistantAvatar extends StatelessWidget {
                       color: Colors.white,
                       fontSize: 12,
                     ),
-                    textAlign: TextAlign.right, // Ensure text alignment to the right
+                    textAlign:
+                        TextAlign.right, // Ensure text alignment to the right
                   ),
                 ),
               ),
@@ -253,8 +310,12 @@ class WelcomeSection extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            darkTheme ? AppColors.primary.withOpacity(0.8) : AppColors.paletteGreen2,
-            darkTheme ? AppColors.darkBackground.withOpacity(0.8) : AppColors.paletteCyan2,
+            darkTheme
+                ? AppColors.primary.withOpacity(0.8)
+                : AppColors.paletteCyan2,
+            darkTheme
+                ? AppColors.darkBackground.withOpacity(0.8)
+                : AppColors.paletteGreen2,
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
@@ -265,13 +326,22 @@ class WelcomeSection extends StatelessWidget {
         children: const [
           Text(
             'Welcome to Your Virtual Assistant Dashboard',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.darkText),
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: AppColors.darkText,
+
+            ),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
           Text(
             'Manage your tasks efficiently with our professional virtual assistants.',
-            style: TextStyle(fontSize: 16, color: AppColors.darkText),
+            style: TextStyle(
+              fontSize: 16,
+              color: AppColors.darkText,
+
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -292,7 +362,11 @@ class RecentActivities extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Recent Activities', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+          Text('Recent Activities',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: darkTheme ? AppColors.darkText : AppColors.lightText)),
           const SizedBox(height: 10),
           const ActivityTile(
             title: 'Task: Design Logo',
@@ -345,7 +419,11 @@ class PerformanceMetrics extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Performance Metrics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+          Text('Performance Metrics',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: darkTheme ? AppColors.darkText : AppColors.lightText)),
           const SizedBox(height: 10),
           const MetricTile(
             metric: 'Tasks Completed',
@@ -376,7 +454,8 @@ class MetricTile extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       title: Text(metric, style: const TextStyle(fontWeight: FontWeight.bold)),
-      trailing: Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+      trailing:
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
     );
   }
 }
@@ -403,9 +482,16 @@ class ServiceHighlights extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Service Highlights', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
+          Text('Service Highlights',
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: darkTheme ? AppColors.darkText : AppColors.lightText)),
           const SizedBox(height: 10),
-          ...services.map((service) => ServiceTile(service: service, darkTheme: darkTheme)).toList(),
+          ...services
+              .map((service) =>
+                  ServiceTile(service: service, darkTheme: darkTheme))
+              .toList(),
         ],
       ),
     );
@@ -425,55 +511,10 @@ class ServiceTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: EdgeInsets.zero,
-      title: Text(service, style: TextStyle(fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
-    );
-  }
-}
-
-class ClientTestimonials extends StatelessWidget {
-  final bool darkTheme;
-
-  const ClientTestimonials({required this.darkTheme});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Client Testimonials', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: darkTheme ? AppColors.darkText : AppColors.lightText)),
-          const SizedBox(height: 10),
-          const TestimonialTile(
-            clientName: 'Alice Johnson',
-            feedback: 'Excellent service! My virtual assistant has been a game changer for my business.',
-          ),
-          const TestimonialTile(
-            clientName: 'Michael Lee',
-            feedback: 'Highly professional and efficient. Highly recommend!',
-          ),
-          // Add more testimonials here
-        ],
-      ),
-    );
-  }
-}
-
-class TestimonialTile extends StatelessWidget {
-  final String clientName;
-  final String feedback;
-
-  const TestimonialTile({
-    required this.clientName,
-    required this.feedback,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(clientName, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(feedback),
+      title: Text(service,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: darkTheme ? AppColors.darkText : AppColors.lightText)),
     );
   }
 }
@@ -491,30 +532,14 @@ class QuickAccessLinks extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
-              // Navigate to task creation page
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: darkTheme ? AppColors.buttonGradientStart : AppColors.buttonGradientEnd,
-            ),
-            child: const Text('Create a New Task'),
-          ),
-          ElevatedButton(
-            onPressed: () {
               // Navigate to support/contact page
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: darkTheme ? AppColors.buttonGradientStart : AppColors.buttonGradientEnd,
+              backgroundColor: darkTheme
+                  ? AppColors.buttonGradientStart
+                  : AppColors.buttonGradientEnd,
             ),
             child: const Text('Contact Support'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Navigate to reports/analytics page
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: darkTheme ? AppColors.buttonGradientStart : AppColors.buttonGradientEnd,
-            ),
-            child: const Text('View Reports'),
           ),
         ],
       ),

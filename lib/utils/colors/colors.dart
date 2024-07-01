@@ -7,6 +7,7 @@ class AppColors {
 
   // Accent Colors
   static const Color accent = Color(0xFFA67D44);
+  static const Color accentSecondary = Color(0xFF5A3E0F);
 
   // Background and Surface Colors
   static const Color lightBackground = Color(0xFFEFE9E1);
@@ -37,6 +38,7 @@ class AppColors {
   static const Color paletteBlue3 = Color(0xFF00A4CC); // Third blue
 
   // Cyan Palette Colors
+  static const Color paletteCyan0 = Color(0xFF00D8D8);
   static const Color paletteCyan1 = Color(0xFF00C1C1); // First cyan
   static const Color paletteCyan2 = Color(0xFF00B5B5); // Second cyan
   static const Color paletteCyan3 = Color(0xFF00A9A9); // Third cyan
@@ -46,6 +48,9 @@ class AppColors {
   static const Color paletteGreen2 = Color(0xFF00D76D); // Second green
   static const Color paletteGreen3 = Color(0xFF00C764); // Third green
 
+  static const Color paletteYellowGreen = Color(0xFF7BFF00); // First yellow
+  static const Color paletteYellowGreen2 = Color(0xFF74EF00); // First yellow
+  static const Color paletteYellowGreen3 = Color(0xFF305C00); // First yellow
   // Yellow Palette Colors
   static const Color paletteYellow1 = Color(0xFFFFFF00); // First yellow
   static const Color paletteYellow2 = Color(0xFFFFE600); // Second yellow

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../controller/assistants_controller/job_posting_controller.dart';
 
+import '../../../controller/assistants_controller/job_posting_controller.dart';
+import '../../../data/homepage_datas/va_niche_data/va_niche_data.dart';
 
 class JobPostingsPage extends StatelessWidget {
   @override
@@ -100,33 +101,12 @@ class HireAssistantDialog extends StatefulWidget {
 }
 
 class _HireAssistantDialogState extends State<HireAssistantDialog> {
-  final List<String> vaNiches = [
-    'General Virtual Assistant (VA)',
-    'Social Media Management',
-    'Computer Technical VA',
-    'Graphical Creation VA',
-    'Administrative VA',
-    'Marketing VA',
-  ];
-
-  final List<String> skills = [
-    'Content Creation',
-    'SEO',
-    'Customer Service',
-    'Project Management',
-    'Accounting',
-    'Graphic Design',
-    'Social Media Management',
-    'Technical Support',
-    'Web Development',
-    'Data Entry',
-  ];
-
   RxList<String> selectedSkills = <String>[].obs;
   RxMap<String, List<String>> skillRequirements = <String, List<String>>{}.obs;
   RxList<TextEditingController> generalRequirementControllers = <TextEditingController>[].obs;
   TextEditingController salaryExpectationController = TextEditingController();
   TextEditingController titleController = TextEditingController();
+  String? selectedVaNiche;
 
   @override
   void initState() {
@@ -146,6 +126,7 @@ class _HireAssistantDialogState extends State<HireAssistantDialog> {
       }));
       salaryExpectationController.text = widget.initialJobPosting!.salaryExpectation;
       titleController.text = widget.initialJobPosting!.title;
+      selectedVaNiche = widget.initialJobPosting!.vaNiche;
     }
   }
 
@@ -191,13 +172,18 @@ class _HireAssistantDialogState extends State<HireAssistantDialog> {
                   labelText: 'Select VA Niche',
                   border: OutlineInputBorder(),
                 ),
-                items: vaNiches.map((String niche) {
+                value: selectedVaNiche,
+                items: vaNiches.map((VANiche niche) {
                   return DropdownMenuItem<String>(
-                    value: niche,
-                    child: Text(niche),
+                    value: niche.name,
+                    child: Text(niche.name),
                   );
                 }).toList(),
-                onChanged: (String? value) {},
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedVaNiche = value;
+                  });
+                },
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -337,7 +323,7 @@ class _HireAssistantDialogState extends State<HireAssistantDialog> {
                 onPressed: () {
                   JobPosting jobPosting = JobPosting(
                     title: titleController.text,
-                    vaNiche: 'VA Niche', // Update this to the actual VA niche
+                    vaNiche: selectedVaNiche ?? 'VA Niche', // Update this to the actual VA niche
                     skills: selectedSkills.toList(),
                     skillRequirements: Map<String, List<String>>.from(skillRequirements),
                     generalRequirements: generalRequirementControllers.map((controller) => controller.text).toList(),
@@ -374,6 +360,8 @@ class _HireAssistantDialogState extends State<HireAssistantDialog> {
   }
 
   void _showSkillsDialog() {
+    final skills = vaNiches.firstWhere((niche) => niche.name == selectedVaNiche).tasks.map((task) => task.keys.first).toList();
+
     Get.dialog(Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15),

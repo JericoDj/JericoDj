@@ -1,6 +1,6 @@
 import 'package:Sourcefully/controller/navigation_controller.dart';
-import 'package:Sourcefully/screens/homepage/homepage.dart';
 import 'package:Sourcefully/splashScreen/splash_screen.dart';
+
 import 'package:Sourcefully/utils/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: LightTheme.theme, // Apply the light theme
       darkTheme: DarkTheme.theme, // Apply the dark theme
       themeMode: ThemeMode.system, // Use system theme mode
-      home: NavigationBarMenu(),
+      home: SplashScreen(),
     );
   }
 }

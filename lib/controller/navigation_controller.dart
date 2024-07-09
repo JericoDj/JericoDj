@@ -25,7 +25,7 @@ class NavigationBarMenu extends StatelessWidget {
 
   Widget buildNavigationBar(NavigationController controller, bool darkTheme) {
     return NavigationBar(
-      height: 80,
+      height: 60,
       elevation: 0,
       backgroundColor: darkTheme ? AppColors.secondary : AppColors.lightBackground,
       selectedIndex: controller.selectedIndex.value,
@@ -47,10 +47,12 @@ class NavigationBarMenu extends StatelessWidget {
 
     return NavigationDestination(
       icon: Icon(
+        size: 16,
         icon,
         color: isSelected ? Colors.white : unselectedColor,
       ),
       label: label,
+
       selectedIcon: Container(
         decoration: BoxDecoration(
           shape: BoxShape.circle,

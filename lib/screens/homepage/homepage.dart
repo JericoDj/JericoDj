@@ -31,12 +31,10 @@ class HomePage extends StatelessWidget {
           },
           child: const Text(
             'Sourcefully',
-
             style: TextStyle(
               fontFamily: 'PlaywriteNO',
               fontWeight: FontWeight.bold,
               letterSpacing: 1,
-
               color: Colors.white,
 
 
@@ -220,6 +218,7 @@ class AssistantAvatar extends StatelessWidget {
               children: [
                 Container(
                   decoration: BoxDecoration(
+
                     shape: BoxShape.circle,
                     gradient: _getGradient(),
                   ),
@@ -228,14 +227,14 @@ class AssistantAvatar extends StatelessWidget {
                     // Space between the border and the avatar
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: 40,
+                      radius: 35,
                       child: CircleAvatar(
                         backgroundColor: Colors.white,
-                        radius: 38,
+                        radius: 35,
                         backgroundImage:
                             imageUrl != null ? NetworkImage(imageUrl!) : null,
                         child: icon != null
-                            ? Icon(icon, size: 40, color: Colors.grey)
+                            ? Icon(icon, size: 35, color: Colors.grey)
                             : null,
                       ),
                     ),
@@ -327,7 +326,7 @@ class WelcomeSection extends StatelessWidget {
           Text(
             'Welcome to Your Virtual Assistant Dashboard',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 18,
               fontWeight: FontWeight.bold,
               color: AppColors.darkText,
 
@@ -338,7 +337,7 @@ class WelcomeSection extends StatelessWidget {
           Text(
             'Manage your tasks efficiently with our professional virtual assistants.',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               color: AppColors.darkText,
 
             ),

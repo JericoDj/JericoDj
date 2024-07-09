@@ -20,10 +20,10 @@ class SpecializedVADrawer extends StatelessWidget {
               child: CustomPaint(
                 painter: BorderPainter(),
                 child: Container(
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.all(5),
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(5),
                     gradient: LinearGradient(
                       colors: [
                         Colors.transparent,
@@ -58,9 +58,8 @@ class SpecializedVADrawer extends StatelessWidget {
                         ).createShader(bounds),
                         child: Text(
                           'Specialized Virtual Assistants',
-
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white, // Set text color to white
                           ),
@@ -68,29 +67,32 @@ class SpecializedVADrawer extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 20), // Add space between title and content
+                    const SizedBox(height: 10), // Add space between title and content
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                         color: Colors.transparent, // Background color for the expanded content
                         borderRadius: BorderRadius.circular(10),
                       ),
                       margin: const EdgeInsets.symmetric(horizontal: 10),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10,
-                          childAspectRatio: 1.9,
-                        ),
-                        itemCount: vaNiches.length,
-                        itemBuilder: (context, index) {
-                          return VAContainer(niche: vaNiches[index], darkTheme: darkTheme);
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Wrap(
+                            alignment: WrapAlignment.center,
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: List.generate(vaNiches.length, (index) {
+                              return Container(
+                                height: 50,
+                                width: (constraints.maxWidth / 2) - 10,
+                                child: VAContainer(niche: vaNiches[index], darkTheme: darkTheme),
+                              );
+                            }),
+                          );
                         },
                       ),
                     ),
+                    SizedBox(height: 10,)
                   ],
                 ),
               ),
@@ -115,7 +117,7 @@ class VAContainer extends StatelessWidget {
         Get.to(() => VADetailsPage(niche: niche, darkTheme: darkTheme));
       },
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -131,7 +133,7 @@ class VAContainer extends StatelessWidget {
           child: Text(
             niche.name,
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 12,
               color: darkTheme ? Colors.white : AppColors.darkText, // Ensure contrast
               fontWeight: FontWeight.bold,
             ),
@@ -230,7 +232,7 @@ class BorderPainter extends CustomPainter {
         end: Alignment.bottomCenter,
       ).createShader(Rect.fromLTWH(0, 0, size.width, size.height))
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 5;
+      ..strokeWidth = 3;
 
     final Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
     final RRect rrect = RRect.fromRectAndRadius(rect, Radius.circular(10));

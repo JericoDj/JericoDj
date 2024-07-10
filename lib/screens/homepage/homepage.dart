@@ -1,3 +1,4 @@
+import 'package:Sourcefully/screens/homepage/homepage_widgets/ads/ads.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,8 +9,8 @@ import '../assistant_page/assitants_widget/job_posting_widget.dart';
 import '../assistant_page/my_assistant_widget/my_assistant_widget.dart';
 import '../messages_page/messages_page.dart';
 import 'homepage_widgets/assistants_widgets_avatar/assintant_task_page.dart';
-import 'homepage_widgets/va_project_manager_button.dart';
-import 'homepage_widgets/vasection.dart';
+import 'homepage_widgets/va_section/va_project_manager_button.dart';
+import 'homepage_widgets/va_section/vasection.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -76,7 +77,12 @@ class HomePage extends StatelessWidget {
         children: [
           AssistantsSection(darkTheme: darkTheme),
           WelcomeSection(darkTheme: darkTheme),
-          VAProjectManagerContainer(darkTheme: darkTheme),
+          SizedBox(height: 20,),
+          AdvertisementSlider(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 4,
+          ),
+          SizedBox(height: 20,),
           SpecializedVADrawer(darkTheme: darkTheme),
           RecentActivities(darkTheme: darkTheme),
           PerformanceMetrics(darkTheme: darkTheme),

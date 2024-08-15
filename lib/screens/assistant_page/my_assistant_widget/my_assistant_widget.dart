@@ -5,6 +5,7 @@ import '../../../controller/assistants_controller/my_assistant_controller.dart';
 import '../../../controller/task_controller/task_controller.dart';
 import '../../../models/my_assistant_model.dart';
 import '../../../widgets/task_dialog/create_task_dialog.dart';
+import '../../timecard/timecard.dart';
 
 class MyAssistantsPage extends StatelessWidget {
   @override
@@ -37,12 +38,16 @@ class MyAssistantsPage extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(assistant.profilePictureUrl),
+                          Flexible(
+                            flex: 2, // Adjust as needed
+                            child: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(assistant.profilePictureUrl),
+                            ),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
+                          const SizedBox(width: 30),
+                          Flexible(
+                            flex: 8, // Adjust as needed
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -51,22 +56,31 @@ class MyAssistantsPage extends StatelessWidget {
                                 Text('Skills: ${assistant.skills}', style: const TextStyle(fontSize: 14)),
                                 const SizedBox(height: 5),
                                 Text('Status: ${assistant.taskStatus}', style: const TextStyle(fontSize: 14)),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      flex: 2, // Adjust as needed
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          tasksController.setAssistants(myAssistantsController.assistants.map((a) => a.name).toList());
+                                          Get.dialog(CreateTaskDialog(assistant: assistant, assistants: myAssistantsController.assistants));
+                                        },
+                                        child: const Text('Assign Task'),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Flexible(
+                                      flex: 2, // Adjust as needed
+                                      child: ElevatedButton(
+                                        onPressed: () => Get.to(() => TimeCardScreen()),
+                                        child: const Text('Timecard'),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {
-                              tasksController.setAssistants(myAssistantsController.assistants.map((a) => a.name).toList());
-                              Get.dialog(CreateTaskDialog(assistant: assistant, assistants: myAssistantsController.assistants));
-                            },
-                            child: const Text('Assign Task'),
-                          ),
-                          const SizedBox(width: 5),
-                          ElevatedButton(
-                            onPressed: () {
-                              myAssistantsController.moveToPastAssistants(assistant);
-                            },
-                            child: const Text('Move to Past'),
                           ),
                         ],
                       ),
@@ -89,6 +103,8 @@ class AssistantDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MyAssistantsController myAssistantsController = Get.find<MyAssistantsController>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text('${assistant.name} Details'),
@@ -140,6 +156,13 @@ class AssistantDetailPage extends StatelessWidget {
                 // View reports action
               },
               child: const Text('View Reports'),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                myAssistantsController.moveToPastAssistants(assistant);
+              },
+              child: const Text('Move to Past'),
             ),
           ],
         ),

@@ -16,8 +16,8 @@ class AdvertisementSlider extends StatefulWidget {
 }
 
 class _AdvertisementSliderState extends State<AdvertisementSlider> {
-  final PageController _pageController = PageController(viewportFraction: 0.5);
-  int _currentPage = 0;
+  final PageController _pageController = PageController(viewportFraction: 0.58, initialPage: 1);
+  int _currentPage = 1;
   Timer? _timer;
 
   final List<String> _images = [
@@ -27,14 +27,29 @@ class _AdvertisementSliderState extends State<AdvertisementSlider> {
     'assets/Ads/Mobile_app_development.png',
   ];
 
+  List<String> get _extendedImages {
+    return [
+      _images.last,
+      ..._images,
+      _images.first,
+    ];
+  }
+
   @override
   void initState() {
     super.initState();
+    _pageController.addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!.round();
+      });
+    });
+
     _timer = Timer.periodic(Duration(seconds: 3), (Timer timer) {
-      if (_currentPage < _images.length) {
+      if (_currentPage < _extendedImages.length - 1) {
         _currentPage++;
       } else {
-        _currentPage = 0;
+        _currentPage = 1;
+        _pageController.jumpToPage(_currentPage);
       }
 
       _pageController.animateToPage(
@@ -59,17 +74,43 @@ class _AdvertisementSliderState extends State<AdvertisementSlider> {
       height: widget.height,
       child: PageView.builder(
         controller: _pageController,
-        itemCount: _images.length,
+        itemCount: _extendedImages.length,
+        onPageChanged: (int index) {
+          setState(() {
+            if (index == _extendedImages.length - 1) {
+              _currentPage = 1;
+              _pageController.jumpToPage(_currentPage);
+            } else if (index == 0) {
+              _currentPage = _extendedImages.length - 2;
+              _pageController.jumpToPage(_currentPage);
+            } else {
+              _currentPage = index;
+            }
+          });
+        },
         itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(4.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                _images[index],
-                fit: BoxFit.cover,
-                width: widget.width,
-                height: widget.height,
+          double scale = (_currentPage == index) ? 1.0 : 0.8;
+          double angle = (_currentPage == index) ? 0.0 : 0.1;
+          return TweenAnimationBuilder(
+            duration: Duration(milliseconds: 300),
+            tween: Tween(begin: 0.8, end: scale),
+            curve: Curves.ease,
+            builder: (context, double value, child) {
+              return Transform.scale(
+                scale: value,
+                child: child,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(
+                  _extendedImages[index],
+                  fit: BoxFit.cover,
+                  width: widget.width,
+                  height: widget.height,
+                ),
               ),
             ),
           );

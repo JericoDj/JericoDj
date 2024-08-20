@@ -1,3 +1,4 @@
+import 'package:Sourcefully/screens/assistant_page/my_assistant_widget/schedule/schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -75,6 +76,14 @@ class MyAssistantsPage extends StatelessWidget {
                                       child: ElevatedButton(
                                         onPressed: () => Get.to(() => TimeCardScreen()),
                                         child: const Text('Timecard'),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    Flexible(
+                                      flex: 2, // Adjust as needed
+                                      child: ElevatedButton(
+                                        onPressed: () => Get.to(() => ViewExcelPage()),
+                                        child: const Text('Schedule'),
                                       ),
                                     ),
                                   ],

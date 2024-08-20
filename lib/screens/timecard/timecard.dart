@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pinput/pinput.dart';
 
 void main() {
   runApp(TimeInTimeOutApp());
@@ -49,22 +50,79 @@ class _TimeCardScreenState extends State<TimeCardScreen> {
   List<TimeEntry> timeEntries = List.generate(31, (index) => TimeEntry(day: index + 1));
   String employeeName = "John Doe"; // Replace with dynamic employee name if needed
   String month = DateFormat('MMMM').format(DateTime.now());
+  String correctPin = "000000"; // Default PIN, to be replaced with a secure method in the future
 
   int getCurrentDay() {
     return DateTime.now().day;
   }
 
+  Future<void> _showPinDialog(Function onCorrectPin) async {
+    String enteredPin = "";
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Enter PIN'),
+          content: Pinput(
+            length: 6,
+            onChanged: (value) {
+              enteredPin = value;
+            },
+            onCompleted: (value) {
+              if (value == correctPin) {
+                Navigator.of(context).pop();
+                onCorrectPin();
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Incorrect PIN, try again.')),
+                );
+              }
+            },
+            defaultPinTheme: PinTheme(
+              width: 40,
+              height: 55,
+              textStyle: TextStyle(fontSize: 20, color: Colors.black),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (enteredPin == correctPin) {
+                  Navigator.of(context).pop();
+                  onCorrectPin();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Incorrect PIN, try again.')),
+                  );
+                }
+              },
+              child: Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _timeIn() {
-    int today = getCurrentDay();
-    setState(() {
-      timeEntries[today - 1].timeIn = DateTime.now();
+    _showPinDialog(() {
+      int today = getCurrentDay();
+      setState(() {
+        timeEntries[today - 1].timeIn = DateTime.now();
+      });
     });
   }
 
   void _timeOut() {
-    int today = getCurrentDay();
-    setState(() {
-      timeEntries[today - 1].timeOut = DateTime.now();
+    _showPinDialog(() {
+      int today = getCurrentDay();
+      setState(() {
+        timeEntries[today - 1].timeOut = DateTime.now();
+      });
     });
   }
 
